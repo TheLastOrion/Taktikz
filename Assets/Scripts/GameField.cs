@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,18 +10,20 @@ public class GameField : MonoBehaviour
     [SerializeField]private int _width;
     [SerializeField]private int _height;
     [SerializeField]private int _cellSize;
-    
+
     // Start is called before the first frame update
     void Start()
     {
         _grid = new MyGrid(_width, _height, _cellSize, transform.position, _nodePrefab, transform);
+        UIEvents.GridVisibilityChanged += UIEvents_GridVisibilityChanged;
     }
-    
-    // Update is called once per frame
-    void Update()
+
+    private void UIEvents_GridVisibilityChanged(bool isVisible)
     {
-        
+        SetNodeVisibility(isVisible);
     }
+
+    // Update is called once per frame
 
     public void SetNodeVisibility(bool isVisible)
     {
@@ -33,4 +36,6 @@ public class GameField : MonoBehaviour
             }
         }
     }
+
+
 }
