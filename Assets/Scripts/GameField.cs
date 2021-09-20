@@ -10,11 +10,14 @@ public class GameField : MonoBehaviour
     [SerializeField]private int _width;
     [SerializeField]private int _height;
     [SerializeField]private int _cellSize;
+    [SerializeField]private Transform _fieldTransform;
+    [SerializeField]private Transform _nodesTransform;
 
     // Start is called before the first frame update
     void Start()
     {
-        _grid = new MyGrid(_width, _height, _cellSize, transform.position, _nodePrefab, transform);
+        _grid = new MyGrid(_width, _height, _cellSize, transform.position, _nodePrefab, _nodesTransform);
+        _fieldTransform.localScale = new Vector3(_width, 1, _height);
         UIEvents.GridVisibilityChanged += UIEvents_GridVisibilityChanged;
     }
 
