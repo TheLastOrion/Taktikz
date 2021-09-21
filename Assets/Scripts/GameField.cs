@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GameField : MonoBehaviour
 {
@@ -21,6 +22,15 @@ public class GameField : MonoBehaviour
         UIEvents.GridVisibilityChanged += UIEvents_GridVisibilityChanged;
     }
 
+    void Update()
+    {
+        if (Input.GetMouseButtonDown((int)MouseButton.LeftMouse))
+        {
+            Debug.LogFormat("Camera To World Point: {0}",Camera.main.ScreenToWorldPoint(Input.mousePosition));
+
+        }
+    }
+
     private void UIEvents_GridVisibilityChanged(bool isVisible)
     {
         SetNodeVisibility(isVisible);
@@ -35,7 +45,7 @@ public class GameField : MonoBehaviour
         {
             for (int y = 0; y < nodes.GetLength(1); y++)
             {
-                nodes[i,y].Highlight(isVisible);
+                nodes[i,y].SetVisible(isVisible);
             }
         }
     }

@@ -4,12 +4,22 @@ using Assets.Scripts.Interfaces;
 using Interfaces;
 using UnityEngine;
 
-public class CharacterController : MonoBehaviour, IMoveCapable, ICombatCapable, ISelectable
+public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable, ISelectable
 {
+    #region Character Variables
+
+    [SerializeField]private int _hitPoints;
+    [SerializeField]private int _movementRange;
+    [SerializeField]private float _moveAnimationSpeed;
+    [SerializeField] private int _baseAttackDamage;
+
+    #endregion
+
+    private Animator _animatorController;
     // Start is called before the first frame update
     void Start()
     {
-        
+        _animatorController = GetComponent<Animator>();
     }
 
     // Update is called once per frame
