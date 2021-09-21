@@ -1,5 +1,5 @@
 ﻿
-namespace Interfaces
+namespace Assets.Scripts.Interfaces
 {
     public interface ISelectable
     {
