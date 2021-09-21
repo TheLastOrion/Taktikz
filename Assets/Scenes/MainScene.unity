@@ -483,6 +483,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24bfa0cf059c96c41ac64415383cb8e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _standardNodeMaterial: {fileID: 2100000, guid: 89d5a96d6855f3c4db52efd58990fabd,
+    type: 2}
+  _highlightNodeMaterial: {fileID: 2100000, guid: b1a0b03a376189940ae0c8e328f67b80,
+    type: 2}
   _nodePrefab: {fileID: 2573376692446676645, guid: a264eaf4cfdfeb64ca559268f86b12d1,
     type: 3}
   _width: 10

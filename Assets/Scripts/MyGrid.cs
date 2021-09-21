@@ -20,7 +20,7 @@ public class MyGrid
             {
                 Vector3 pos = gridObjectPos + new Vector3(i, 0, y) * _cellSize - new Vector3(gridSize.x, 0, gridSize.y) * 0.5f +
                               new Vector3(1, 0, 1) * SPACING_OFFSET;
-                Nodes[i, y] = new Node(i, y, _cellSize, outline, pos, parent);
+                Nodes[i, y] =  new Node(i, y, _cellSize, outline, pos, parent);
             }
         }
     }
