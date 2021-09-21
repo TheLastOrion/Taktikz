@@ -2,73 +2,37 @@
 using System.Collections.Generic;
 using System.Text;
 using Assets.Scripts.Interfaces;
+using Enumerations;
 using Interfaces;
 using UnityEngine;
 
-public class Node : IHighlightable, ISelectable
+public class Node
 {
-    private GameObject _nodeOutline;
     private int _x;
     private int _y;
     private int _cellSize;
-    private bool _isBlocked;
-    private MeshRenderer _renderer;
+    private bool _isBlocked = false;
+    public bool Blocked {
+        get
+        {
+            return _isBlocked;
+        } set
+        {
+            _isBlocked = value;
+        }
 
-    public Node(int x, int y, int cellSize, GameObject outline, Vector3 pos , Transform parent, bool isBlocked = false)
+    }
+
+    public Node(int x, int y, int cellSize, bool isBlocked = false)
     {
         _isBlocked = isBlocked;
         _x = x;
         _y = y;
         _cellSize = cellSize;
-        GameObject go = GameObject.Instantiate(outline, pos, Quaternion.identity);
-        go.transform.localScale *= _cellSize;
-        go.transform.parent = parent;
-        StringBuilder name = new StringBuilder();
-        
-        //Give names to nodes for debug purposes
-        name.AppendFormat("Node X: {0} Y: {1}", x, y);
-        go.name = name.ToString();
-        AssignOutline(go);
     }
+
     public Vector2 GetNodeCoords()
     {
         return new Vector2(_x, _y);
-    }
-
-    public Vector3 GetNodePosition()
-    {
-        if (_nodeOutline != null)
-        {
-            return _nodeOutline.transform.position;
-        }
-        else
-        {
-            Debug.LogErrorFormat("Error! Node at X: {0} Y: {1} has no node outline!", _x, _y );
-            return Vector3.zero;
-        }
-    }
-    public void SetVisible(bool active)
-    {
-        _nodeOutline.GetComponent<MeshRenderer>().enabled = active;
-    }
-
-    public void Highlight(bool active)
-    {
-    }
-
-    public void AssignOutline(GameObject outline)
-    {
-        _nodeOutline = outline;
-        _renderer = _nodeOutline.GetComponent<MeshRenderer>();
-    }
-
-    public ISelectable Select()
-    {
-        return this;
-    }
-
-    public void Deselect()
-    {
-        
     }
 }

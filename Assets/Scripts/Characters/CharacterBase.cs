@@ -29,18 +29,17 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         
     }
 
-    
-
     public IEnumerator MoveToNode(List<Node> path)
     {
+        _animatorController.SetBool("Run", true);
         for (int i = 0; i < path.Count;)
         {
 
-            if (Vector3.Distance(path[i].GetNodePosition(), transform.position) >=
+            if (Vector3.Distance(GameField.Instance.GetNodePosition((int)path[i].GetNodeCoords().x, (int)path[i].GetNodeCoords().y), transform.position) >=
                 GeneralConstants.NODE_CENTER_DISTANCE_COMPARISON_EPSILON)
             {
                 //transform.Translate(path[i].GetNodePosition().normalized * Time.deltaTime * _moveAnimationSpeed);
-                transform.position = Vector3.MoveTowards(transform.position, path[i].GetNodePosition(),
+                transform.position = Vector3.MoveTowards(transform.position, GameField.Instance.GetNodePosition((int)path[i].GetNodeCoords().x, (int)path[i].GetNodeCoords().y),
                     Time.fixedDeltaTime * _moveAnimationSpeed);
                 yield return new WaitForFixedUpdate();
             }
@@ -48,9 +47,9 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
             {
                 i++;
                 yield return new WaitForFixedUpdate();
-
             }
         }
+        _animatorController.SetBool("Run", false);
     }
 
     public void DebugMove()
@@ -67,6 +66,20 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
          moveCoroutine = StartCoroutine(MoveToNode(DebugList));
 
     }
-    
-    
+
+
+    public void Attack()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void Die()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void TakeDamage()
+    {
+        throw new System.NotImplementedException();
+    }
 }

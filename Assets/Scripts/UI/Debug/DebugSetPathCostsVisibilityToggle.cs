@@ -1,12 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SetGridVisibleToggle : MonoBehaviour
+public class DebugSetPathCostsVisibilityToggle : MonoBehaviour
 {
-
     private Toggle _toggle;
     public void Start()
     {
@@ -17,6 +15,6 @@ public class SetGridVisibleToggle : MonoBehaviour
 
     private void OnToggleValueChanged(bool isOn)
     {
-        UIEvents.FireGridVisibilityChanged(isOn);
+        UIEvents.FirePathCostVisibilityChanged(isOn);
     }
 }

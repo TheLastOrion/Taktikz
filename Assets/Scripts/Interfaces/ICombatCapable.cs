@@ -2,6 +2,9 @@
 {
     public interface ICombatCapable
     {
+        void Attack();
+        void Die();
+        void TakeDamage();
 
     }
 }
