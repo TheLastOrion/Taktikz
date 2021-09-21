@@ -1,21 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Interfaces;
-using Interfaces;
 using UnityEngine;
 
-public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable, ISelectable
+public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
 {
     #region Character Variables
 
     [SerializeField]private int _hitPoints;
     [SerializeField]private int _movementRange;
     [SerializeField]private float _moveAnimationSpeed;
-    [SerializeField] private int _baseAttackDamage;
+    [SerializeField]private int _baseAttackDamage;
 
     #endregion
 
     private Animator _animatorController;
+
+    private Node _currentResidingNode;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,23 +29,44 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable, ISelec
         
     }
 
-    public IEnumerator MoveToNode(Node node)
+    
+
+    public IEnumerator MoveToNode(List<Node> path)
     {
-        yield return null;
+        for (int i = 0; i < path.Count;)
+        {
+
+            if (Vector3.Distance(path[i].GetNodePosition(), transform.position) >=
+                GeneralConstants.NODE_CENTER_DISTANCE_COMPARISON_EPSILON)
+            {
+                //transform.Translate(path[i].GetNodePosition().normalized * Time.deltaTime * _moveAnimationSpeed);
+                transform.position = Vector3.MoveTowards(transform.position, path[i].GetNodePosition(),
+                    Time.fixedDeltaTime * _moveAnimationSpeed);
+                yield return new WaitForFixedUpdate();
+            }
+            else
+            {
+                i++;
+                yield return new WaitForFixedUpdate();
+
+            }
+        }
     }
 
-    public IEnumerator MoveToNode(int x, int y)
+    public void DebugMove()
     {
-        yield return null;
-    }
+        Coroutine moveCoroutine;
+         List<Node> DebugList = new List<Node>
+        {
+            GameField.Instance.GetNodeFromGrid(0, 0),
+            GameField.Instance.GetNodeFromGrid(0, 1),
+            GameField.Instance.GetNodeFromGrid(0, 2),
+            GameField.Instance.GetNodeFromGrid(0, 3),
+            GameField.Instance.GetNodeFromGrid(0, 4),
+        };
+         moveCoroutine = StartCoroutine(MoveToNode(DebugList));
 
-    public ISelectable Select()
-    {
-        return this;
     }
-
-    public void Deselect()
-    {
-
-    }
+    
+    
 }

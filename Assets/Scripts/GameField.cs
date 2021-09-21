@@ -4,8 +4,8 @@ using UnityEngine.UIElements;
 
 public class GameField : MonoBehaviour
 {
-    [SerializeField] public Material _standardNodeMaterial;
-    [SerializeField] public Material _highlightNodeMaterial;
+    [SerializeField] public Material StandardNodeMaterial;
+    [SerializeField] public Material HighlightNodeMaterial;
     private static MyGrid _grid;
     [SerializeField]private GameObject _nodePrefab;
     [SerializeField]private int _width;
@@ -32,26 +32,26 @@ public class GameField : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown((int)MouseButton.LeftMouse))
-        {
-            //Debug.LogFormat("Camera To World Point: {0}",Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //if (Input.GetMouseButtonDown((int)MouseButton.LeftMouse))
+        //{
+        //    //Debug.LogFormat("Camera To World Point: {0}",Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        //    RaycastHit hit;
+        //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            //if (Physics.Raycast(ray, out hit, Single.MaxValue, LayerMask.NameToLayer("NodeTile")))
-            //{
-            //    Transform objectHit = hit.transform;
-            //    Debug.LogFormat("Node Name: {0}", hit.transform.gameObject.name);
+        //    //if (Physics.Raycast(ray, out hit, Single.MaxValue, LayerMask.NameToLayer("NodeTile")))
+        //    //{
+        //    //    Transform objectHit = hit.transform;
+        //    //    Debug.LogFormat("Node Name: {0}", hit.transform.gameObject.name);
 
-            //}
-            if (Physics.Raycast(ray, out hit, float.MaxValue, 1 << NODE_TILE_LAYER))
-            {
-                Transform objectHit = hit.transform;
-                //Debug.LogFormat("Node Name: {0}", hit.transform.gameObject.name);
-                objectHit.gameObject.GetComponent<MeshRenderer>().material = _highlightNodeMaterial;
+        //    //}
+        //    if (Physics.Raycast(ray, out hit, float.MaxValue, 1 << NODE_TILE_LAYER))
+        //    {
+        //        Transform objectHit = hit.transform;
+        //        //Debug.LogFormat("Node Name: {0}", hit.transform.gameObject.name);
+        //        objectHit.gameObject.GetComponent<MeshRenderer>().material = HighlightNodeMaterial;
 
-            }
-        }
+        //    }
+        //}
     }
 
     private void UIEvents_GridVisibilityChanged(bool isVisible)
@@ -85,6 +85,11 @@ public class GameField : MonoBehaviour
         Node[,] nodes = _grid.GetNodes();
         Vector2 coords = node.GetNodeCoords();
         nodes[(int)coords.x, (int)coords.y].Highlight(isHighlighted);
+    }
+
+    public Node GetNodeFromGrid(int x, int y)
+    {
+        return _grid.GetNode(x, y);
     }
 
 

@@ -1,13 +1,10 @@
-﻿
-using System.Collections;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace Assets.Scripts.Interfaces
 {
     public interface IMoveCapable
     {
-        IEnumerator MoveToNode(Node node);
-        IEnumerator MoveToNode(int x, int y);
-
-
+        IEnumerator MoveToNode(List<Node> path);
     }
 }

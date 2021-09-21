@@ -26,34 +26,26 @@ public class Node : IHighlightable, ISelectable
         StringBuilder name = new StringBuilder();
         
         //Give names to nodes for debug purposes
-        name.AppendFormat("Node X: {0} Y: {1}", x+1, y+1);
-        go.name = name.ToString();
-        AssignOutline(go);
-    }
-
-    void Start()
-    {
-    }
-
-    void Initalize(int x, int y, int cellSize, GameObject outline, Vector3 pos, Transform parent, bool isBlocked = false)
-    {
-        _isBlocked = isBlocked;
-        _x = x;
-        _y = y;
-        _cellSize = cellSize;
-        GameObject go = GameObject.Instantiate(outline, pos, Quaternion.identity);
-        go.transform.localScale *= _cellSize;
-        go.transform.parent = parent;
-        StringBuilder name = new StringBuilder();
-
-        //Give names to nodes for debug purposes
-        name.AppendFormat("Node X: {0} Y: {1}", x + 1, y + 1);
+        name.AppendFormat("Node X: {0} Y: {1}", x, y);
         go.name = name.ToString();
         AssignOutline(go);
     }
     public Vector2 GetNodeCoords()
     {
         return new Vector2(_x, _y);
+    }
+
+    public Vector3 GetNodePosition()
+    {
+        if (_nodeOutline != null)
+        {
+            return _nodeOutline.transform.position;
+        }
+        else
+        {
+            Debug.LogErrorFormat("Error! Node at X: {0} Y: {1} has no node outline!", _x, _y );
+            return Vector3.zero;
+        }
     }
     public void SetVisible(bool active)
     {

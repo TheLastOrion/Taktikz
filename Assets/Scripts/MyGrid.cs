@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.UIElements;
+﻿
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class MyGrid
 {
@@ -33,6 +29,20 @@ public class MyGrid
     public Node[,] GetNodes()
     {
         return Nodes;
+    }
+
+    public Node GetNode(int x, int y)
+    {
+        if (x < Nodes.GetLength(0) && y < Nodes.GetLength(1))
+        {
+            return Nodes[x, y];
+        }
+        else
+        {
+            Debug.LogErrorFormat("Error! Node X: {0} Y: {1} are not found in Grid!" , x, y);
+            return null;
+        }
+
     }
     
 }
