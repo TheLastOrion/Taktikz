@@ -37,19 +37,27 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         
     }
 
-    public IEnumerator MoveToNode(List<Node> path)
+    public IEnumerator MoveToNode(List<Node> path, bool rotate = true)
     {
         _animatorController.SetBool("Run", true);
         for (int i = 0; i < path.Count;)
         {
-            //transform.Rotate(path[i]);
+            Vector3 targetPos =
+                GameField.Instance.GetNodePosition((int)path[i].GetNodeCoords().x, (int)path[i].GetNodeCoords().y);
+
+            if (rotate)
+            {
+                RotateTowards(path[i]);
+            }
             if (Vector3.Distance(GameField.Instance.GetNodePosition((int)path[i].GetNodeCoords().x, (int)path[i].GetNodeCoords().y), transform.position) >=
                 GeneralConstants.NODE_CENTER_DISTANCE_COMPARISON_EPSILON)
             {
                 //transform.Translate(path[i].GetNodePosition().normalized * Time.deltaTime * _moveAnimationSpeed);
-                transform.position = Vector3.MoveTowards(transform.position, GameField.Instance.GetNodePosition((int)path[i].GetNodeCoords().x, (int)path[i].GetNodeCoords().y),
+                transform.position = Vector3.MoveTowards(transform.position, targetPos,
                     Time.fixedDeltaTime * _moveAnimationSpeed);
+
                 
+
                 yield return new WaitForFixedUpdate();
             }
             else
@@ -59,6 +67,16 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
             }
         }
         _animatorController.SetBool("Run", false);
+    }
+
+    public void RotateTowards(Node nextNode)
+    {
+        Vector3 targetPos =
+            GameField.Instance.GetNodePosition((int)nextNode.GetNodeCoords().x, (int)nextNode.GetNodeCoords().y);
+
+        Vector3 direction = targetPos - transform.position;
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        transform.rotation = rotation;
     }
 
     public PlayerType GetPlayerType()

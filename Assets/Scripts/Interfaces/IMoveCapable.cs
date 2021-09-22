@@ -5,6 +5,6 @@ namespace Assets.Scripts.Interfaces
 {
     public interface IMoveCapable
     {
-        IEnumerator MoveToNode(List<Node> path);
+        IEnumerator MoveToNode(List<Node> path, bool rotate = true);
     }
 }
