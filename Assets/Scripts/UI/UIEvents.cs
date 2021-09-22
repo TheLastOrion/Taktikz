@@ -7,8 +7,8 @@ public class UIEvents
 {
     public static event Action<bool> GridVisibilityChanged;
     public static event Action<bool> PathCostVisibilityChanged;
-    public static event Action<bool> CoordsVisibilityChanged; 
-
+    public static event Action<bool> CoordsVisibilityChanged;
+    public static event Action SpawnEnemiesButtonPressed; 
     public static void FireGridVisibilityChanged(bool isOn)
     {
         if (GridVisibilityChanged != null)
@@ -30,6 +30,14 @@ public class UIEvents
         if (CoordsVisibilityChanged != null)
         {
             CoordsVisibilityChanged(isOn);
+        }
+    }
+
+    public static void FireSpawnEnemiesButtonPressed()
+    {
+        if (SpawnEnemiesButtonPressed != null)
+        {
+            SpawnEnemiesButtonPressed();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Interfaces;
+using Enumerations;
 using UnityEngine;
 
 public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
@@ -11,7 +12,14 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
     [SerializeField]private int _movementRange;
     [SerializeField]private float _moveAnimationSpeed;
     [SerializeField]private int _baseAttackDamage;
+    [SerializeField] private PlayerType _playerType;
+    private Node _currentNode;
 
+    public Node CurrentNode
+    {
+        get { return _currentNode; }
+        set { _currentNode = value; }
+    }
     #endregion
 
     private Animator _animatorController;
@@ -34,13 +42,14 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         _animatorController.SetBool("Run", true);
         for (int i = 0; i < path.Count;)
         {
-
+            //transform.Rotate(path[i]);
             if (Vector3.Distance(GameField.Instance.GetNodePosition((int)path[i].GetNodeCoords().x, (int)path[i].GetNodeCoords().y), transform.position) >=
                 GeneralConstants.NODE_CENTER_DISTANCE_COMPARISON_EPSILON)
             {
                 //transform.Translate(path[i].GetNodePosition().normalized * Time.deltaTime * _moveAnimationSpeed);
                 transform.position = Vector3.MoveTowards(transform.position, GameField.Instance.GetNodePosition((int)path[i].GetNodeCoords().x, (int)path[i].GetNodeCoords().y),
                     Time.fixedDeltaTime * _moveAnimationSpeed);
+                
                 yield return new WaitForFixedUpdate();
             }
             else
@@ -50,6 +59,16 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
             }
         }
         _animatorController.SetBool("Run", false);
+    }
+
+    public PlayerType GetPlayerType()
+    {
+        return _playerType;
+    }
+
+    public void SetPlayerType(PlayerType playerType)
+    {
+        _playerType = playerType;
     }
 
     public void DebugMove()
@@ -68,9 +87,18 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
     }
 
 
-    public void Attack()
+    public void Attack(CharacterBase defendingChar)
     {
-        throw new System.NotImplementedException();
+        if (defendingChar._playerType == this._playerType)
+        {
+            Debug.LogError("Error, can't attack the same player's character!");
+            return;
+        }
+        else
+        {
+            
+        }
+
     }
 
     public void Die()

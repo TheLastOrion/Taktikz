@@ -7,7 +7,7 @@ public class MyGrid
     public MyGrid(int _width, int _height, int _cellSize)
     {
         Nodes = new Node[_width, _height];
-        Vector3 gridSize = GetGridSize(_width, _height, _cellSize);
+        Vector3 gridSize = GetGridTotalSize(_width, _height, _cellSize);
         for (int i = 0; i < Nodes.GetLength(0); i++)
         {
             for (int y = 0; y < Nodes.GetLength(1); y++)
@@ -20,11 +20,10 @@ public class MyGrid
     
 
 
-    public Vector3 GetGridSize(int width, int height, int cellSize)
+    public Vector3 GetGridTotalSize(int width, int height, int cellSize)
     {
         return new Vector3(width, height) * cellSize; 
     }
-
     public Node[,] GetNodes()
     {
         return Nodes;

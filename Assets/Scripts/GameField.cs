@@ -102,7 +102,10 @@ public class GameField : MonoBehaviour
     //    Vector2 coords = node.GetNodeCoords();
     //    nodes[(int)coords.x, (int)coords.y].Highlight(highlightType);
     //}
-
+    public Vector2 GetGridSize()
+    {
+        return new Vector2(_width, _height);
+    }
     public Node GetNodeFromGrid(int x, int y)
     {
         return _grid.GetNode(x, y);
@@ -111,6 +114,11 @@ public class GameField : MonoBehaviour
     public Vector3 GetNodePosition(int x, int y)
     {
         return NodeObjectDictionary[new Vector2(x,y)].transform.position;
+    }
+
+    public GameObject GetNodeObject(Node node)
+    {
+        return NodeObjectDictionary[new Vector2(node.GetNodeCoords().x, node.GetNodeCoords().y)];
     }
 
 
