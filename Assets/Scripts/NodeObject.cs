@@ -26,9 +26,9 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
         _highlightRenderer = _highlightObject.GetComponent<MeshRenderer>();
         StringBuilder s = new StringBuilder();
         s.Append("X: ");
-        s.Append(_node.GetNodeCoords().x);
+        s.Append(_node.GetXCoord());
         s.Append("\n Y: ");
-        s.Append(_node.GetNodeCoords().y);
+        s.Append(_node.GetYCoord());
         _coordsText.text = s.ToString();
         s.Clear();
         this.GetComponent<BoxCollider>().size = new Vector3(1, _outlineObject.transform.localScale.y, 1);
@@ -107,13 +107,17 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
     {
         GameField.Instance.CurrentSelectedNode = _node;
         GameEvents.FireNodeSelected(_node);
-        Debug.LogFormat("Node Selected  X:{0}  Y:{1} ", _node.GetNodeCoords().x, _node.GetNodeCoords().y);
+        Debug.LogFormat("Node Selected  X:{0}  Y:{1} ", _node.GetXCoord(), _node.GetYCoord());
+        GameField._grid.CheckNodeAvailabilityNE(_node);
+        GameField._grid.CheckNodeAvailabilityNW(_node);
+        GameField._grid.CheckNodeAvailabilitySE(_node);
+        GameField._grid.CheckNodeAvailabilitySW(_node);
         return this;
     }
 
     public void Deselect()
     {
-
+        GameField.Instance.CurrentSelectedNode = null;
     }
     
 

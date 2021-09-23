@@ -31,8 +31,25 @@ public class Node
         _cellSize = cellSize;
     }
 
+
+    /// <summary>
+    /// Originally preceded GetXCoord and GetYCoord methods,
+    /// I've decided to deprecate it and use cleaner methods
+    /// without creating new Vector2 overheads
+    /// </summary>
+    /// <returns></returns>
     public Vector2 GetNodeCoords()
     {
         return new Vector2(_x, _y);
+    }
+
+    public int GetXCoord()
+    {
+        return _x;
+    }
+
+    public int GetYCoord()
+    {
+        return _y;
     }
 }

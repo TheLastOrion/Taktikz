@@ -43,13 +43,13 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         for (int i = 0; i < path.Count;)
         {
             Vector3 targetPos =
-                GameField.Instance.GetNodePosition((int)path[i].GetNodeCoords().x, (int)path[i].GetNodeCoords().y);
+                GameField.Instance.GetNodePosition(path[i].GetXCoord(), path[i].GetYCoord());
 
             if (rotate)
             {
                 RotateTowards(path[i]);
             }
-            if (Vector3.Distance(GameField.Instance.GetNodePosition((int)path[i].GetNodeCoords().x, (int)path[i].GetNodeCoords().y), transform.position) >=
+            if (Vector3.Distance(GameField.Instance.GetNodePosition(path[i].GetXCoord(), path[i].GetYCoord()), transform.position) >=
                 GeneralConstants.NODE_CENTER_DISTANCE_COMPARISON_EPSILON)
             {
                 //transform.Translate(path[i].GetNodePosition().normalized * Time.deltaTime * _moveAnimationSpeed);
@@ -72,7 +72,7 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
     public void RotateTowards(Node nextNode)
     {
         Vector3 targetPos =
-            GameField.Instance.GetNodePosition((int)nextNode.GetNodeCoords().x, (int)nextNode.GetNodeCoords().y);
+            GameField.Instance.GetNodePosition(nextNode.GetXCoord(), nextNode.GetYCoord());
 
         Vector3 direction = targetPos - transform.position;
         Quaternion rotation = Quaternion.LookRotation(direction);

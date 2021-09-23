@@ -12,7 +12,8 @@ public class GameField : MonoBehaviour
     [SerializeField] public Material BlockedNodeMaterial;
     [SerializeField] public Material AvailableNodeMaterial;
 
-    private static MyGrid _grid;
+    //TODO change to private again, made public for debugging purposes
+    public static MyGrid _grid;
     [SerializeField]private GameObject _nodePrefab;
     [SerializeField]private int _width;
     [SerializeField]private int _height;
@@ -22,6 +23,8 @@ public class GameField : MonoBehaviour
     private const int NODE_TILE_LAYER = 8;
     private float SPACING_OFFSET;
     public static GameField Instance;
+
+    [SerializeField] private int DebugRange;
 
     private Node _currentSelectedNode;
 
@@ -110,16 +113,38 @@ public class GameField : MonoBehaviour
 
     }
 
-    public void SetNodeObjectHighlights(Node node)
-    {
+    public void SetNodeObjectHighlights(Node node, int range)
+    {   
         Node[,] gridNodes = _grid.GetNodes();
-        for (int i = 0; i < gridNodes.GetLength(0); i++)
-        {
-            for (int j = 0; j < gridNodes.GetLength(1); j++)
-            {
 
+        for (int i = 0; i < range; i++)
+        {
+            if (_grid.CheckNodeAvailabilityNW(node) && node.GetYCoord() - 1 > 0)
+            {
+                NodeObjectDictionary[new Vector2(node.GetXCoord() , node.GetYCoord() - 1)].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
             }
+            if (_grid.CheckNodeAvailabilityNE(node) && node.GetXCoord() - 1 > 0)
+            {
+                NodeObjectDictionary[new Vector2(node.GetXCoord() -1, node.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
+            }
+            if (_grid.CheckNodeAvailabilitySW(node) && node.GetXCoord() + 1 < _width)
+            {
+                NodeObjectDictionary[new Vector2(node.GetXCoord() + 1, node.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
+            }
+            if (_grid.CheckNodeAvailabilitySE(node) && node.GetXCoord() - 1 > 0)
+            {
+                NodeObjectDictionary[new Vector2(node.GetXCoord() , node.GetYCoord() + 1)].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
+            }
+
         }
+
+        //for (int i = 0; i < gridNodes.GetLength(0); i++)
+        //{
+        //    for (int j = 0; j < gridNodes.GetLength(1); j++)
+        //    {
+
+        //    }
+        //}
     }
 
     public void HighlightDebug()
@@ -156,6 +181,6 @@ public class GameField : MonoBehaviour
 
     public GameObject GetNodeObject(Node node)
     {
-        return NodeObjectDictionary[new Vector2(node.GetNodeCoords().x, node.GetNodeCoords().y)];
+        return NodeObjectDictionary[new Vector2(node.GetXCoord(), node.GetYCoord())];
     }
 }
