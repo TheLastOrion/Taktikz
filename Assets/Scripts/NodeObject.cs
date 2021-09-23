@@ -6,17 +6,24 @@ using Enumerations;
 using Interfaces;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
-public class NodeObject : MonoBehaviour, ISelectable, IHighlightable
+public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerClickHandler
 {
     private Node _node;
+    [SerializeField]private GameObject _outlineObject;
+    [SerializeField]private GameObject _highlightObject;
     [SerializeField]private TextMeshPro _coordsText;
     [SerializeField]private TextMeshPro _moveCostText;
-    
+    private HighlightTypes _currentHighlight;
+    private MeshRenderer _outlineRenderer;
+    private MeshRenderer _highlightRenderer;
+
     private void Start()
     {
-        _renderer = GetComponent<MeshRenderer>();
-
+        _outlineRenderer = _outlineObject.GetComponent<MeshRenderer>();
+        _highlightRenderer = _highlightObject.GetComponent<MeshRenderer>();
         StringBuilder s = new StringBuilder();
         s.Append("X: ");
         s.Append(_node.GetNodeCoords().x);
@@ -24,23 +31,39 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable
         s.Append(_node.GetNodeCoords().y);
         _coordsText.text = s.ToString();
         s.Clear();
-
-
+        this.GetComponent<BoxCollider>().size = new Vector3(1, _outlineObject.transform.localScale.y, 1);
+        _currentHighlight = HighlightTypes.None;
     }
 
+    // Start is called before the first frame update
+
+
+    void OnMouseOver()
+    {
+        // Change the color of the GameObject to red when the mouse is over GameObject
+        //_outlineRenderer.material = GameField.Instance.HighlightNodeMaterial;
+        Highlight(HighlightTypes.Hover);
+    }
+
+    void OnMouseExit()
+    {
+        // Reset the color of the GameObject back to normal
+        //_outlineRenderer.material = GameField.Instance.StandardNodeMaterial;
+        UnHighlight();
+    }
+    
     private void Update()
     {
-
+        //if (Input.GetMouseButtonDown((int)MouseButton.LeftMouse))
+        //{
+        //    Select();
+        //}
     }
+
+    
     public Vector3 GetNodePosition()
     {
         return transform.position;
-    }
-    private MeshRenderer _renderer;
-
-    public void SetVisible(bool active)
-    {
-        _renderer.enabled = active;
     }
 
     public void SetCoords(bool isOn)
@@ -54,11 +77,37 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable
     }
     public void Highlight(HighlightTypes highlightType)
     {
-        _renderer.material = GameField.Instance.HighlightNodeMaterial;
+        switch (highlightType)
+        {
+            case HighlightTypes.None:
+                _outlineRenderer.material = GameField.Instance.StandardNodeMaterial;
+                break;
+            case HighlightTypes.Hover:
+                _highlightRenderer.enabled = true;
+                break;
+            case HighlightTypes.Attackable:
+                _outlineRenderer.material = GameField.Instance.AttackableNodeMaterial;
+                break;
+            case HighlightTypes.Available:
+                _outlineRenderer.material = GameField.Instance.AvailableNodeMaterial;
+                break;
+            case HighlightTypes.Blocked:
+                _outlineRenderer.material = GameField.Instance.BlockedNodeMaterial;
+                break;
+
+        }
+    }
+
+    public void UnHighlight()
+    {
+        _highlightRenderer.enabled = false;
     }
 
     public ISelectable Select()
     {
+        GameField.Instance.CurrentSelectedNode = _node;
+        GameEvents.FireNodeSelected(_node);
+        Debug.LogFormat("Node Selected  X:{0}  Y:{1} ", _node.GetNodeCoords().x, _node.GetNodeCoords().y);
         return this;
     }
 
@@ -78,5 +127,22 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable
         return _node;
     }
 
-    
+    public HighlightTypes GetHighlightType()
+    {
+        return _currentHighlight;
+    }
+
+    public void SetHighlightType(HighlightTypes highlightType)
+    {
+        _currentHighlight = highlightType;
+    }
+
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            Select();
+        }
+    }
 }

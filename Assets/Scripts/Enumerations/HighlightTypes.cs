@@ -5,7 +5,7 @@
         #region Node Highlight Types
 
         None = 0,
-        Standard = 1,
+        Hover = 1,
         Available = 2,
         Blocked = 3,
         Attackable = 4,

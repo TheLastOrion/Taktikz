@@ -5,8 +5,13 @@ using UnityEngine;
 
 public class GameField : MonoBehaviour
 {
+    
     [SerializeField] public Material StandardNodeMaterial;
     [SerializeField] public Material HighlightNodeMaterial;
+    [SerializeField] public Material AttackableNodeMaterial;
+    [SerializeField] public Material BlockedNodeMaterial;
+    [SerializeField] public Material AvailableNodeMaterial;
+
     private static MyGrid _grid;
     [SerializeField]private GameObject _nodePrefab;
     [SerializeField]private int _width;
@@ -18,6 +23,13 @@ public class GameField : MonoBehaviour
     private float SPACING_OFFSET;
     public static GameField Instance;
 
+    private Node _currentSelectedNode;
+
+    public Node CurrentSelectedNode
+    {
+        get { return _currentSelectedNode; }
+        set { _currentSelectedNode = value; }
+    }
     public Dictionary<Vector2, GameObject> NodeObjectDictionary = new Dictionary<Vector2, GameObject>();
     // Start is called before the first frame update
     void Start()
@@ -32,8 +44,9 @@ public class GameField : MonoBehaviour
         AttachNodeObjectsToGrid();
         _fieldTransform.localScale = new Vector3(_width, 1, _height);
         UIEvents.GridVisibilityChanged += UIEvents_GridVisibilityChanged;
-        UIEvents.CoordsVisibilityChanged += UIEvents_CoordsVisibilityChanged; ;
-        UIEvents.PathCostVisibilityChanged += UIEvents_PathCostVisibilityChanged; ;
+        UIEvents.CoordsVisibilityChanged += UIEvents_CoordsVisibilityChanged; 
+        UIEvents.PathCostVisibilityChanged += UIEvents_PathCostVisibilityChanged;
+        GameEvents.NodeSelected += GameEvents_NodeSelected;
 
     }
 
@@ -61,10 +74,6 @@ public class GameField : MonoBehaviour
                 NodeObjectDictionary[new Vector2(i,y)] = go;
             }
         }
-    }
-    void Update()
-    {
-
     }
 
     private void UIEvents_GridVisibilityChanged(bool isVisible)
@@ -96,12 +105,41 @@ public class GameField : MonoBehaviour
         }
     }
 
-    //public void HighlightNode(Node node, HighlightTypes highlightType)
-    //{
-    //    Node[,] nodes = _grid.GetNodes();
-    //    Vector2 coords = node.GetNodeCoords();
-    //    nodes[(int)coords.x, (int)coords.y].Highlight(highlightType);
-    //}
+    private void GameEvents_NodeSelected(Node node)
+    {
+
+    }
+
+    public void SetNodeObjectHighlights(Node node)
+    {
+        Node[,] gridNodes = _grid.GetNodes();
+        for (int i = 0; i < gridNodes.GetLength(0); i++)
+        {
+            for (int j = 0; j < gridNodes.GetLength(1); j++)
+            {
+
+            }
+        }
+    }
+
+    public void HighlightDebug()
+    {
+        for (int i = 0; i < _width; i++)
+        {
+            for (int j = 0; j < _height; j++)
+            {
+                NodeObjectDictionary[new Vector2(i,j)].GetComponent<NodeObject>().Highlight((HighlightTypes)Random.Range(2, 5));
+            }
+        }
+    }
+    public void ResetNodeObjectHighlights()
+    {
+        foreach (var value in NodeObjectDictionary.Values)
+        {
+            value.gameObject.GetComponent<NodeObject>().Highlight(HighlightTypes.None);
+        }
+    }
+
     public Vector2 GetGridSize()
     {
         return new Vector2(_width, _height);
@@ -120,8 +158,4 @@ public class GameField : MonoBehaviour
     {
         return NodeObjectDictionary[new Vector2(node.GetNodeCoords().x, node.GetNodeCoords().y)];
     }
-
-
-
-
 }

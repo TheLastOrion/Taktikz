@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+
 
 public class UIEvents
 {
     public static event Action<bool> GridVisibilityChanged;
     public static event Action<bool> PathCostVisibilityChanged;
     public static event Action<bool> CoordsVisibilityChanged;
-    public static event Action SpawnEnemiesButtonPressed; 
+    public static event Action SpawnEnemiesButtonPressed;
+
     public static void FireGridVisibilityChanged(bool isOn)
     {
         if (GridVisibilityChanged != null)
@@ -40,4 +39,6 @@ public class UIEvents
             SpawnEnemiesButtonPressed();
         }
     }
+
+    
 }
