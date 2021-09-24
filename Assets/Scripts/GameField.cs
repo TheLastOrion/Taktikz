@@ -168,35 +168,25 @@ public class GameField : MonoBehaviour
 
 
             }
+            if (currentLevelNeighbor.Blocked)
+            {
+                NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Blocked);
+            }
         }
 
         count++;
         TraverseNeighboursAndSetNodeObjectHighlights(currentLevelNeighbors, range);
-    
-        
+    }
 
-        //for (int i = 0; i < range; i++)
-        //{
-        //    if (_grid.CheckNodeAvailabilityNW(node) && node.GetYCoord() - 1 > 0)
-        //    {
-        //        NodeObjectDictionary[new Vector2(node.GetXCoord(), node.GetYCoord() - 1)].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
-        //    }
-        //    if (_grid.CheckNodeAvailabilityNE(node) && node.GetXCoord() - 1 > 0)
-        //    {
-        //        NodeObjectDictionary[new Vector2(node.GetXCoord() - 1, node.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
-        //    }
-        //    if (_grid.CheckNodeAvailabilitySW(node) && node.GetXCoord() + 1 < _width)
-        //    {
-        //        NodeObjectDictionary[new Vector2(node.GetXCoord() + 1, node.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
-        //    }
-        //    if (_grid.CheckNodeAvailabilitySE(node) && node.GetXCoord() - 1 > 0)
-        //    {
-        //        NodeObjectDictionary[new Vector2(node.GetXCoord(), node.GetYCoord() + 1)].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
-        //    }
+    public List<Node> GetShortestPathToTargetNode(Node nodeStart, Node nodeEnd)
+    {
+        List<Node> pathList = new List<Node>();
+        for (int i = nodeEnd.DistanceFromSelectedNode; i >= 0; i--)
+        {
 
-        //}
+        }
 
-
+        return pathList;
     }
 
     public void HighlightDebug()

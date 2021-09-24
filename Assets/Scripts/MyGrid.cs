@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using Enumerations;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -48,19 +49,19 @@ public class MyGrid
     public List<Node> GetNeighboringNodes(int x, int y)
     {
         List<Node> nodeList = new List<Node>();
-        if (CheckNodeAvailabilityNW(GetNode(x, y)))
+        if (CheckNodeAvailabilityNW(GetNode(x, y)) != TileAvailabilityType.NonExistent)
         {
             nodeList.Add(GetNode(x, y-1));
         }
-        if (CheckNodeAvailabilityNE(GetNode(x, y)))
+        if (CheckNodeAvailabilityNE(GetNode(x, y)) != TileAvailabilityType.NonExistent)
         {
             nodeList.Add(GetNode(x-1, y));
         }
-        if (CheckNodeAvailabilitySW(GetNode(x, y)))
+        if (CheckNodeAvailabilitySW(GetNode(x, y)) != TileAvailabilityType.NonExistent)
         {
             nodeList.Add(GetNode(x + 1, y));
         }
-        if (CheckNodeAvailabilitySE(GetNode(x, y)))
+        if (CheckNodeAvailabilitySE(GetNode(x, y)) != TileAvailabilityType.NonExistent)
         {
             nodeList.Add(GetNode(x, y +1));
         }
@@ -78,12 +79,12 @@ public class MyGrid
             node.DistanceFromSelectedNode = -1;
         }
     }
-    public bool CheckNodeAvailabilityNW(Node node)
+    public TileAvailabilityType CheckNodeAvailabilityNW(Node node)
     {
         if (node == null)
         {
-            Debug.LogError("Node is null!");
-            return false;
+            //Debug.LogError("Node is null!");
+            return TileAvailabilityType.NonExistent;
         }
 
         int startX = node.GetXCoord();
@@ -91,70 +92,70 @@ public class MyGrid
 
         if (startY - 1 < 0)
         {
-            Debug.LogFormat("Node X: {0}  Y:{1} has no NW boundary!", startX, startY);
-            return false;
+            //Debug.LogFormat("Node X: {0}  Y:{1} has no NW boundary!", startX, startY);
+            return TileAvailabilityType.NonExistent;
         }
-        bool isAvailable = !GetNode(startX, startY - 1).Blocked;
-        Debug.LogFormat("Node X: {0}  Y:{1}  NW is {2}!", startX, startY, isAvailable ? "Available" : "Blocked");
+        TileAvailabilityType isAvailable = !GetNode(startX, startY - 1).Blocked ? TileAvailabilityType.AvailableForMovement : TileAvailabilityType.Blocked;
+        //Debug.LogFormat("Node X: {0}  Y:{1}  NW is {2}!", startX, startY, isAvailable ? "Available" : "Blocked");
         return isAvailable;
     }
-    public bool CheckNodeAvailabilityNE(Node node)
+    public TileAvailabilityType CheckNodeAvailabilityNE(Node node)
     {
         if (node == null)
         {
-            Debug.LogError("Node is null!");
-            return false;
+            //Debug.LogError("Node is null!");
+            return TileAvailabilityType.NonExistent;
         }
         int startX = node.GetXCoord();
         int startY = node.GetYCoord();
 
         if (startX - 1 < 0)
         {
-            Debug.LogFormat("Node X: {0}  Y:{1} has no NE boundary!", startX, startY);
-            return false;
+            //Debug.LogFormat("Node X: {0}  Y:{1} has no NE boundary!", startX, startY);
+            return TileAvailabilityType.NonExistent;
         }
-        bool isAvailable = !GetNode(startX - 1, startY).Blocked;
-        Debug.LogFormat("Node X: {0}  Y:{1}  NE is {2}!", startX, startY, isAvailable ? "Available" : "Blocked");
+        TileAvailabilityType isAvailable = !GetNode(startX - 1, startY).Blocked ? TileAvailabilityType.AvailableForMovement : TileAvailabilityType.Blocked;
+        //Debug.LogFormat("Node X: {0}  Y:{1}  NE is {2}!", startX, startY, isAvailable ? "Available" : "Blocked");
         return isAvailable;
     }
-    public bool CheckNodeAvailabilitySW(Node node)
+    public TileAvailabilityType CheckNodeAvailabilitySW(Node node)
     {
         if (node == null)
         {
-            Debug.LogError("Node is null!");
-            return false;
+            //Debug.LogError("Node is null!");
+            return TileAvailabilityType.NonExistent;
         }
         int startX = node.GetXCoord();
         int startY = node.GetYCoord();
 
         if (startX + 1 >= Nodes.GetLength(0))
         {
-            Debug.LogFormat("Node X: {0}  Y:{1} has no SW boundary!", startX, startY);
-            return false;
+            //Debug.LogFormat("Node X: {0}  Y:{1} has no SW boundary!", startX, startY);
+            return TileAvailabilityType.NonExistent;
         }
-        bool isAvailable =  !GetNode(startX + 1, startY).Blocked;
+        TileAvailabilityType isAvailable =  !GetNode(startX + 1, startY).Blocked ? TileAvailabilityType.AvailableForMovement : TileAvailabilityType.Blocked;
 
-        Debug.LogFormat("Node X: {0}  Y:{1}  SW is {2}!", startX, startY, isAvailable ? "Available" : "Blocked");
+        //Debug.LogFormat("Node X: {0}  Y:{1}  SW is {2}!", startX, startY, isAvailable ? "Available" : "Blocked");
         return isAvailable;
     }
 
-    public bool CheckNodeAvailabilitySE(Node node)
+    public TileAvailabilityType CheckNodeAvailabilitySE(Node node)
     {
         if (node == null)
         {
-            Debug.LogError("Node is null!");
-            return false;
+            //Debug.LogError("Node is null!");
+            return TileAvailabilityType.NonExistent;
         }
         int startX = node.GetXCoord();
         int startY = node.GetYCoord();
         if (startY + 1 >= Nodes.GetLength(1))
         {
-            Debug.LogFormat("Node X: {0}  Y:{1} has no SE boundary!", startX, startY);
-            return false;
+            //Debug.LogFormat("Node X: {0}  Y:{1} has no SE boundary!", startX, startY);
+            return TileAvailabilityType.NonExistent;
         }
-        bool isAvailable = !GetNode(startX, startY + 1).Blocked;
+        TileAvailabilityType isAvailable = !GetNode(startX, startY + 1).Blocked ? TileAvailabilityType.AvailableForMovement : TileAvailabilityType.Blocked;
 
-        Debug.LogFormat("Node X: {0}  Y:{1}  SE is {2}!", startX, startY, isAvailable ? "Available" : "Blocked");
+        //Debug.LogFormat("Node X: {0}  Y:{1}  SE is {2}!", startX, startY, isAvailable ? "Available" : "Blocked");
         return isAvailable;
     }
 

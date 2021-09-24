@@ -779,6 +779,7 @@ MonoBehaviour:
   _cellSize: 10
   _fieldTransform: {fileID: 1327266701}
   _nodesTransform: {fileID: 1180880660}
+  DebugRange: 0
 --- !u!114 &652039010
 MonoBehaviour:
   m_ObjectHideFlags: 0
