@@ -116,6 +116,7 @@ public class GameField : MonoBehaviour
         Debug.LogFormat("Node Selected: X:{0}  Y:{1}", node.GetXCoord(), node.GetYCoord());
         _grid.ResetAllNodesForPathfinding();
         ClearAllNodeObjectPathCosts();
+        ClearNodeObjectHighlights();
         count = 0;
         TraverseNeighboursAndSetNodeObjectHighlights(new List<Node>{node}, 3);
     }
@@ -163,6 +164,9 @@ public class GameField : MonoBehaviour
                 currentLevelNeighbor.IsTraversedDuringPathfinding = true;
                 currentLevelNeighbor.DistanceFromSelectedNode = count + 1;
                 NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().AssignPathCostText((count + 1).ToString() );
+                NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Available); 
+
+
             }
         }
 
@@ -205,7 +209,7 @@ public class GameField : MonoBehaviour
             }
         }
     }
-    public void ResetNodeObjectHighlights()
+    public void ClearNodeObjectHighlights()
     {
         foreach (var value in NodeObjectDictionary.Values)
         {
