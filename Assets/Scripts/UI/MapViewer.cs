@@ -48,11 +48,19 @@ namespace UI
 
             if (Input.mouseScrollDelta.y < 0)
             {
+                if (_mainCamera.orthographicSize < 50)
+                {
+                    _mainCamera.orthographicSize++;
+                }
                 //Debug.LogFormat("Mouse Down!:{0}", Input.mouseScrollDelta.y);
             }
 
             if (Input.mouseScrollDelta.y> 0)
             {
+                if (_mainCamera.orthographicSize > 10)
+                {
+                    _mainCamera.orthographicSize--;
+                }
                 //Debug.LogFormat("Mouse Up!:{0}", Input.mouseScrollDelta.y);
             }
 

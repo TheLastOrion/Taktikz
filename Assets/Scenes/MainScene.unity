@@ -794,7 +794,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _unitsContainer: {fileID: 1709044924}
   EnemyTypes:
-  - {fileID: 6193677047675690147, guid: e3937578c6b383e42b6ac41e7e882314, type: 3}
+  - {fileID: 6229617885370196326, guid: a7906e5e0f5a77a4b8c537ba3f89b7f6, type: 3}
+  - {fileID: 4567934617372415136, guid: b3ab5d353a19dc74994168a972c5767a, type: 3}
+  - {fileID: 8782145129146269273, guid: 4ed7d93354209c84899b9bc346ebf0d5, type: 3}
 --- !u!4 &652039013
 Transform:
   m_ObjectHideFlags: 0

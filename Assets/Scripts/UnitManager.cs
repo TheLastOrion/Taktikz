@@ -3,12 +3,14 @@ using System;
 using System.Collections.Generic;
 using Enumerations;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class UnitManager : MonoBehaviour
 {
     [SerializeField] private Transform _unitsContainer;
     
     [SerializeField]private List<GameObject> EnemyTypes;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -41,7 +43,7 @@ public class UnitManager : MonoBehaviour
                     GameField.Instance.GetNodeFromGrid(randomX, randomY).TileAvailability != TileAvailabilityType.OccupiedByFriends ||
                     GameField.Instance.GetNodeFromGrid(randomX, randomY).TileAvailability != TileAvailabilityType.Blocked)
                 {
-                    SpawnEnemy(GameField.Instance.GetNodeFromGrid(randomX, randomY), EnemyTypes[0]);
+                    SpawnEnemy(GameField.Instance.GetNodeFromGrid(randomX, randomY), EnemyTypes[Random.Range(0, EnemyTypes.Count)]);
                     break;
                 }
             }
