@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using Enumerations;
+using NUnit.Framework.Interfaces;
+using UnityEditor.Experimental;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 public class GameField : MonoBehaviour
 {
@@ -87,7 +90,7 @@ public class GameField : MonoBehaviour
     {
         foreach (var value in NodeObjectDictionary.Values)
         {
-            value.GetComponent<NodeObject>().SetPathCosts(isVisible);
+            value.GetComponent<NodeObject>().SetPathCostsVisual(isVisible);
         }
     }
 
@@ -110,41 +113,86 @@ public class GameField : MonoBehaviour
 
     private void GameEvents_NodeSelected(Node node)
     {
-
+        Debug.LogFormat("Node Selected: X:{0}  Y:{1}", node.GetXCoord(), node.GetYCoord());
+        _grid.ResetAllNodesForPathfinding();
+        ClearAllNodeObjectPathCosts();
+        count = 0;
+        TraverseNeighboursAndSetNodeObjectHighlights(new List<Node>{node}, 3);
     }
 
-    public void SetNodeObjectHighlights(Node node, int range)
-    {   
-        Node[,] gridNodes = _grid.GetNodes();
-
-        for (int i = 0; i < range; i++)
+    private void ClearAllNodeObjectPathCosts()
+    {
+        foreach (var o in NodeObjectDictionary)
         {
-            if (_grid.CheckNodeAvailabilityNW(node) && node.GetYCoord() - 1 > 0)
-            {
-                NodeObjectDictionary[new Vector2(node.GetXCoord() , node.GetYCoord() - 1)].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
-            }
-            if (_grid.CheckNodeAvailabilityNE(node) && node.GetXCoord() - 1 > 0)
-            {
-                NodeObjectDictionary[new Vector2(node.GetXCoord() -1, node.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
-            }
-            if (_grid.CheckNodeAvailabilitySW(node) && node.GetXCoord() + 1 < _width)
-            {
-                NodeObjectDictionary[new Vector2(node.GetXCoord() + 1, node.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
-            }
-            if (_grid.CheckNodeAvailabilitySE(node) && node.GetXCoord() - 1 > 0)
-            {
-                NodeObjectDictionary[new Vector2(node.GetXCoord() , node.GetYCoord() + 1)].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
-            }
+            o.Value.GetComponent<NodeObject>().AssignPathCostText("");
+        }
+    }
 
+    private int count = 0;
+    public void TraverseNeighboursAndSetNodeObjectHighlights(List<Node> nodes, int range)
+    {
+
+        if (count >= range)
+            return;
+        foreach (var node in nodes)
+        {
+            if (!node.IsTraversedDuringPathfinding)
+            {
+                node.IsTraversedDuringPathfinding = true;
+                node.DistanceFromSelectedNode = count;
+                NodeObjectDictionary[new Vector2(node.GetXCoord(), node.GetYCoord())].GetComponent<NodeObject>().AssignPathCostText((count).ToString());
+
+            }
+        }
+        
+        List<Node> currentLevelNeighbors = new List<Node>();
+
+        foreach (var node in nodes)
+        {
+            var copyList = _grid.GetNeighboringNodes(node.GetXCoord(), node.GetYCoord());
+            foreach (var node1 in copyList)
+            {
+                currentLevelNeighbors.Add(node1);
+            }
         }
 
-        //for (int i = 0; i < gridNodes.GetLength(0); i++)
-        //{
-        //    for (int j = 0; j < gridNodes.GetLength(1); j++)
-        //    {
+        foreach (var currentLevelNeighbor in currentLevelNeighbors)
+        {
+            if (!currentLevelNeighbor.IsTraversedDuringPathfinding && !currentLevelNeighbor.Blocked)
+            {
+                currentLevelNeighbor.IsTraversedDuringPathfinding = true;
+                currentLevelNeighbor.DistanceFromSelectedNode = count + 1;
+                NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().AssignPathCostText((count + 1).ToString() );
+            }
+        }
 
+        count++;
+        TraverseNeighboursAndSetNodeObjectHighlights(currentLevelNeighbors, range);
+    
+        
+
+        //for (int i = 0; i < range; i++)
+        //{
+        //    if (_grid.CheckNodeAvailabilityNW(node) && node.GetYCoord() - 1 > 0)
+        //    {
+        //        NodeObjectDictionary[new Vector2(node.GetXCoord(), node.GetYCoord() - 1)].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
         //    }
+        //    if (_grid.CheckNodeAvailabilityNE(node) && node.GetXCoord() - 1 > 0)
+        //    {
+        //        NodeObjectDictionary[new Vector2(node.GetXCoord() - 1, node.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
+        //    }
+        //    if (_grid.CheckNodeAvailabilitySW(node) && node.GetXCoord() + 1 < _width)
+        //    {
+        //        NodeObjectDictionary[new Vector2(node.GetXCoord() + 1, node.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
+        //    }
+        //    if (_grid.CheckNodeAvailabilitySE(node) && node.GetXCoord() - 1 > 0)
+        //    {
+        //        NodeObjectDictionary[new Vector2(node.GetXCoord(), node.GetYCoord() + 1)].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
+        //    }
+
         //}
+
+
     }
 
     public void HighlightDebug()

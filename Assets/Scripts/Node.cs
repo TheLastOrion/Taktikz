@@ -11,6 +11,20 @@ public class Node
     private int _x;
     private int _y;
     private int _cellSize;
+    private int _distanceFromSelectedNode;
+    private bool _isTraversedDuringPathfinding;
+
+    public int DistanceFromSelectedNode
+    {
+        get { return _distanceFromSelectedNode;}
+        set { _distanceFromSelectedNode = value; }
+    }
+
+    public bool IsTraversedDuringPathfinding
+    {
+        get { return _isTraversedDuringPathfinding; }
+        set { _isTraversedDuringPathfinding = value; }
+    }
     private bool _isBlocked = false;
     public bool Blocked {
         get
@@ -29,6 +43,8 @@ public class Node
         _x = x;
         _y = y;
         _cellSize = cellSize;
+        _distanceFromSelectedNode = -1;
+        _isTraversedDuringPathfinding = false;
     }
 
 

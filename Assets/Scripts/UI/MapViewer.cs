@@ -48,12 +48,12 @@ namespace UI
 
             if (Input.mouseScrollDelta.y < 0)
             {
-                Debug.LogFormat("Mouse Down!:{0}", Input.mouseScrollDelta.y);
+                //Debug.LogFormat("Mouse Down!:{0}", Input.mouseScrollDelta.y);
             }
 
             if (Input.mouseScrollDelta.y> 0)
             {
-                Debug.LogFormat("Mouse Up!:{0}", Input.mouseScrollDelta.y);
+                //Debug.LogFormat("Mouse Up!:{0}", Input.mouseScrollDelta.y);
             }
 
 

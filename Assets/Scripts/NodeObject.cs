@@ -71,9 +71,14 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
         _coordsText.gameObject.GetComponent<MeshRenderer>().enabled = isOn;
     }
 
-    public void SetPathCosts(bool isOn)
+    public void SetPathCostsVisual(bool isOn)
     {
         _moveCostText.gameObject.GetComponent<MeshRenderer>().enabled = isOn;
+    }
+
+    public void AssignPathCostText(string cost)
+    {
+        _moveCostText.text = cost;
     }
     public void Highlight(HighlightTypes highlightType)
     {
@@ -107,7 +112,7 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
     {
         GameField.Instance.CurrentSelectedNode = _node;
         GameEvents.FireNodeSelected(_node);
-        Debug.LogFormat("Node Selected  X:{0}  Y:{1} ", _node.GetXCoord(), _node.GetYCoord());
+        //Debug.LogFormat("Node Selected  X:{0}  Y:{1} ", _node.GetXCoord(), _node.GetYCoord());
         GameField._grid.CheckNodeAvailabilityNE(_node);
         GameField._grid.CheckNodeAvailabilityNW(_node);
         GameField._grid.CheckNodeAvailabilitySE(_node);

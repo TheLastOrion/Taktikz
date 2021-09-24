@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
 
 public class MyGrid
@@ -31,7 +33,7 @@ public class MyGrid
 
     public Node GetNode(int x, int y)
     {
-        if (x < Nodes.GetLength(0) && y < Nodes.GetLength(1))
+        if (x < Nodes.GetLength(0) && y < Nodes.GetLength(1) && x >= 0 && y >= 0)
         {
             return Nodes[x, y];
         }
@@ -43,8 +45,47 @@ public class MyGrid
 
     }
 
+    public List<Node> GetNeighboringNodes(int x, int y)
+    {
+        List<Node> nodeList = new List<Node>();
+        if (CheckNodeAvailabilityNW(GetNode(x, y)))
+        {
+            nodeList.Add(GetNode(x, y-1));
+        }
+        if (CheckNodeAvailabilityNE(GetNode(x, y)))
+        {
+            nodeList.Add(GetNode(x-1, y));
+        }
+        if (CheckNodeAvailabilitySW(GetNode(x, y)))
+        {
+            nodeList.Add(GetNode(x + 1, y));
+        }
+        if (CheckNodeAvailabilitySE(GetNode(x, y)))
+        {
+            nodeList.Add(GetNode(x, y +1));
+        }
+
+        return nodeList;
+
+    }
+
+    public void ResetAllNodesForPathfinding()
+    {
+        Debug.Log("Resetting all grid nodes for pathfinding values!");
+        foreach (var node in Nodes)
+        {
+            node.IsTraversedDuringPathfinding = false;
+            node.DistanceFromSelectedNode = -1;
+        }
+    }
     public bool CheckNodeAvailabilityNW(Node node)
     {
+        if (node == null)
+        {
+            Debug.LogError("Node is null!");
+            return false;
+        }
+
         int startX = node.GetXCoord();
         int startY = node.GetYCoord();
 
@@ -59,6 +100,11 @@ public class MyGrid
     }
     public bool CheckNodeAvailabilityNE(Node node)
     {
+        if (node == null)
+        {
+            Debug.LogError("Node is null!");
+            return false;
+        }
         int startX = node.GetXCoord();
         int startY = node.GetYCoord();
 
@@ -73,6 +119,11 @@ public class MyGrid
     }
     public bool CheckNodeAvailabilitySW(Node node)
     {
+        if (node == null)
+        {
+            Debug.LogError("Node is null!");
+            return false;
+        }
         int startX = node.GetXCoord();
         int startY = node.GetYCoord();
 
@@ -89,6 +140,11 @@ public class MyGrid
 
     public bool CheckNodeAvailabilitySE(Node node)
     {
+        if (node == null)
+        {
+            Debug.LogError("Node is null!");
+            return false;
+        }
         int startX = node.GetXCoord();
         int startY = node.GetYCoord();
         if (startY + 1 >= Nodes.GetLength(1))
