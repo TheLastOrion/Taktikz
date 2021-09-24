@@ -1,7 +1,6 @@
 ﻿
 using System.Collections.Generic;
 using Enumerations;
-using NUnit.Framework;
 using UnityEngine;
 
 public class MyGrid
@@ -95,8 +94,9 @@ public class MyGrid
             //Debug.LogFormat("Node X: {0}  Y:{1} has no NW boundary!", startX, startY);
             return TileAvailabilityType.NonExistent;
         }
-        TileAvailabilityType isAvailable = !GetNode(startX, startY - 1).Blocked ? TileAvailabilityType.AvailableForMovement : TileAvailabilityType.Blocked;
-        //Debug.LogFormat("Node X: {0}  Y:{1}  NW is {2}!", startX, startY, isAvailable ? "Available" : "Blocked");
+
+        TileAvailabilityType isAvailable = GetNode(startX, startY - 1).TileAvailability;
+        //Debug.LogFormat("Node X: {0}  Y:{1}  NW is {2}!", startX, startY, isAvailable ? "Available" : "TileAvailability");
         return isAvailable;
     }
     public TileAvailabilityType CheckNodeAvailabilityNE(Node node)
@@ -114,8 +114,8 @@ public class MyGrid
             //Debug.LogFormat("Node X: {0}  Y:{1} has no NE boundary!", startX, startY);
             return TileAvailabilityType.NonExistent;
         }
-        TileAvailabilityType isAvailable = !GetNode(startX - 1, startY).Blocked ? TileAvailabilityType.AvailableForMovement : TileAvailabilityType.Blocked;
-        //Debug.LogFormat("Node X: {0}  Y:{1}  NE is {2}!", startX, startY, isAvailable ? "Available" : "Blocked");
+        TileAvailabilityType isAvailable = GetNode(startX - 1, startY).TileAvailability;
+        //Debug.LogFormat("Node X: {0}  Y:{1}  NE is {2}!", startX, startY, isAvailable ? "Available" : "TileAvailability");
         return isAvailable;
     }
     public TileAvailabilityType CheckNodeAvailabilitySW(Node node)
@@ -133,9 +133,10 @@ public class MyGrid
             //Debug.LogFormat("Node X: {0}  Y:{1} has no SW boundary!", startX, startY);
             return TileAvailabilityType.NonExistent;
         }
-        TileAvailabilityType isAvailable =  !GetNode(startX + 1, startY).Blocked ? TileAvailabilityType.AvailableForMovement : TileAvailabilityType.Blocked;
 
-        //Debug.LogFormat("Node X: {0}  Y:{1}  SW is {2}!", startX, startY, isAvailable ? "Available" : "Blocked");
+        TileAvailabilityType isAvailable = GetNode(startX + 1, startY).TileAvailability;
+
+        //Debug.LogFormat("Node X: {0}  Y:{1}  SW is {2}!", startX, startY, isAvailable ? "Available" : "TileAvailability");
         return isAvailable;
     }
 
@@ -153,9 +154,9 @@ public class MyGrid
             //Debug.LogFormat("Node X: {0}  Y:{1} has no SE boundary!", startX, startY);
             return TileAvailabilityType.NonExistent;
         }
-        TileAvailabilityType isAvailable = !GetNode(startX, startY + 1).Blocked ? TileAvailabilityType.AvailableForMovement : TileAvailabilityType.Blocked;
+        TileAvailabilityType isAvailable = GetNode(startX, startY + 1).TileAvailability;
 
-        //Debug.LogFormat("Node X: {0}  Y:{1}  SE is {2}!", startX, startY, isAvailable ? "Available" : "Blocked");
+        //Debug.LogFormat("Node X: {0}  Y:{1}  SE is {2}!", startX, startY, isAvailable ? "Available" : "TileAvailability");
         return isAvailable;
     }
 

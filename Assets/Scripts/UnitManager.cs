@@ -7,6 +7,7 @@ using UnityEngine;
 public class UnitManager : MonoBehaviour
 {
     [SerializeField] private Transform _unitsContainer;
+    
     [SerializeField]private List<GameObject> EnemyTypes;
     // Start is called before the first frame update
     void Start()
@@ -36,7 +37,9 @@ public class UnitManager : MonoBehaviour
                 int randomX = UnityEngine.Random.Range(0, (int)GameField.Instance.GetGridSize().x);
                 int randomY = UnityEngine.Random.Range(0, (int)(GameField.Instance.GetGridSize().y / 2));
 
-                if (!GameField.Instance.GetNodeFromGrid(randomX, randomY).Blocked)
+                if (GameField.Instance.GetNodeFromGrid(randomX, randomY).TileAvailability != TileAvailabilityType.OccupiedByEnemies ||
+                    GameField.Instance.GetNodeFromGrid(randomX, randomY).TileAvailability != TileAvailabilityType.OccupiedByFriends ||
+                    GameField.Instance.GetNodeFromGrid(randomX, randomY).TileAvailability != TileAvailabilityType.Blocked)
                 {
                     SpawnEnemy(GameField.Instance.GetNodeFromGrid(randomX, randomY), EnemyTypes[0]);
                     break;
@@ -50,7 +53,7 @@ public class UnitManager : MonoBehaviour
 
     public void SpawnEnemy(Node node, GameObject enemyObject)
     {
-        node.Blocked = true;
+        node.TileAvailability = TileAvailabilityType.OccupiedByEnemies;
         GameObject go = GameObject.Instantiate(enemyObject, GameField.Instance.GetNodeObject(node).transform.position,
             Quaternion.identity, _unitsContainer);
         CharacterBase enemyChar = go.GetComponent<CharacterBase>();

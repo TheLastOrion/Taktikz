@@ -4,7 +4,10 @@
     {
         NonExistent = 0,
         AvailableForMovement = 1,
-        Blocked = 2
+        OutOfRange = 2,
+        Blocked = 3,
+        OccupiedByFriends = 4,
+        OccupiedByEnemies = 5,
 
     }
 }

@@ -159,7 +159,10 @@ public class GameField : MonoBehaviour
 
         foreach (var currentLevelNeighbor in currentLevelNeighbors)
         {
-            if (!currentLevelNeighbor.IsTraversedDuringPathfinding && !currentLevelNeighbor.Blocked)
+            if (!currentLevelNeighbor.IsTraversedDuringPathfinding && 
+                (currentLevelNeighbor.TileAvailability != TileAvailabilityType.Blocked &&
+                 currentLevelNeighbor.TileAvailability != TileAvailabilityType.OccupiedByEnemies &&
+                 currentLevelNeighbor.TileAvailability != TileAvailabilityType.OccupiedByFriends))
             {
                 currentLevelNeighbor.IsTraversedDuringPathfinding = true;
                 currentLevelNeighbor.DistanceFromSelectedNode = count + 1;
@@ -168,7 +171,9 @@ public class GameField : MonoBehaviour
 
 
             }
-            if (currentLevelNeighbor.Blocked)
+            if (currentLevelNeighbor.TileAvailability == TileAvailabilityType.Blocked ||
+                currentLevelNeighbor.TileAvailability == TileAvailabilityType.OccupiedByEnemies||
+                currentLevelNeighbor.TileAvailability == TileAvailabilityType.OccupiedByFriends)
             {
                 NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Blocked);
             }
