@@ -38,6 +38,12 @@ public class UnitManager : MonoBehaviour
 
     private void GameEvents_MoveCommandIssued(Node startNode, Node endNode)
     {
+        if (GameField.Instance.GetNodeFromGrid(endNode.GetXCoord(), endNode.GetYCoord()).TileAvailability ==
+            TileAvailabilityType.Blocked)
+        {
+            Debug.LogError("The end node for this movement is blocked!");
+            return;
+        }
         CharacterBase moveChar = CharactersByNodes[startNode];
         List<Node> path = GameField.Instance.GetShortestPathToTargetNode(endNode);
         moveChar.MoveToNode(path);
