@@ -55,11 +55,16 @@ public class GameField : MonoBehaviour
         UIEvents.CoordsVisibilityChanged += UIEvents_CoordsVisibilityChanged; 
         UIEvents.PathCostVisibilityChanged += UIEvents_PathCostVisibilityChanged;
         GameEvents.NodeSelected += GameEvents_NodeSelected;
+        GameEvents.CharacterMoveCompleted += GameEvents_CharacterMoveCompleted;
         GameEvents.FireGridInitialized(_grid);
 
     }
 
-    
+    private void GameEvents_CharacterMoveCompleted(CharacterBase arg1, Node startNode, Node endNode)
+    {
+        startNode.TileAvailability = TileAvailabilityType.AvailableForMovement;
+        endNode.TileAvailability = TileAvailabilityType.Blocked;
+    }
 
     void AttachNodeObjectsToGrid()
     {
