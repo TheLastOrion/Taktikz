@@ -110,7 +110,6 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
 
     public ISelectable Select()
     {
-        GameField.Instance.CurrentSelectedNode = _node;
         GameEvents.FireNodeSelected(_node);
         //Debug.LogFormat("Node Selected  X:{0}  Y:{1} ", _node.GetXCoord(), _node.GetYCoord());
 

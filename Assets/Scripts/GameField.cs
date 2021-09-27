@@ -5,6 +5,7 @@ using NUnit.Framework.Interfaces;
 using UnityEditor.Experimental;
 using UnityEngine;
 using UnityEngine.Scripting;
+using UnityEngine.UI;
 
 public class GameField : MonoBehaviour
 {
@@ -129,13 +130,18 @@ public class GameField : MonoBehaviour
 
     private void GameEvents_NodeSelected(Node node)
     {
-        Debug.LogFormat("Node Selected: X:{0}  Y:{1}", node.GetXCoord(), node.GetYCoord());
-        _grid.ResetAllNodesForPathfinding();
-        ClearAllNodeObjectPathCosts();
-        ClearNodeObjectHighlights();
-        _dfsCount = 0;
-        TraverseNeighboursAndSetNodeObjectHighlights(new List<Node>{node}, 3, true);
-        
+        if (UnitManager.Instance.CharactersByNodes.ContainsKey(node) &&
+            UnitManager.Instance.CharactersByNodes[node].GetPlayerType() == PlayerType.Player)
+        {
+            Debug.LogFormat("Node Selected: X:{0}  Y:{1}", node.GetXCoord(), node.GetYCoord());
+            _grid.ResetAllNodesForPathfinding();
+            ClearAllNodeObjectPathCosts();
+            ClearNodeObjectHighlights();
+            _dfsCount = 0;
+            GameField.Instance.CurrentSelectedNode = node;
+
+            TraverseNeighboursAndSetNodeObjectHighlights(new List<Node> { node }, 3, true);
+        }
     }
 
     private void ClearAllNodeObjectPathCosts()

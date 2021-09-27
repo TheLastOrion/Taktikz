@@ -88,19 +88,19 @@ public class MyGrid
 
     public Node GetNeighborWithLowestCost(int x, int y, int currentNodePathCost)
     {
-        if ((CheckNodeAvailabilityNW(GetNode(x, y-1)) != TileAvailabilityType.NonExistent && CheckNodeAvailabilityNW(GetNode(x, y-1)) != TileAvailabilityType.Blocked && GetNode(x, y-1).DistanceFromSelectedNode== currentNodePathCost - 1) || GetNode(x, y - 1).DistanceFromSelectedNode == 0)
+        if (CheckNodeAvailabilityNW(GetNode(x, y-1)) != TileAvailabilityType.NonExistent && (CheckNodeAvailabilityNW(GetNode(x, y-1)) != TileAvailabilityType.Blocked && GetNode(x, y-1).DistanceFromSelectedNode== currentNodePathCost - 1 || GetNode(x, y - 1).DistanceFromSelectedNode == 0))
         {
             return GetNode(x, y-1);
         }
-        else if ((CheckNodeAvailabilityNE(GetNode(x-1, y)) != TileAvailabilityType.NonExistent && CheckNodeAvailabilityNW(GetNode(x-1, y)) != TileAvailabilityType.Blocked && GetNode(x-1, y).DistanceFromSelectedNode== currentNodePathCost - 1) || GetNode(x - 1, y).DistanceFromSelectedNode == 0)
+        else if (CheckNodeAvailabilityNE(GetNode(x-1, y)) != TileAvailabilityType.NonExistent && (CheckNodeAvailabilityNE(GetNode(x-1, y)) != TileAvailabilityType.Blocked && GetNode(x-1, y).DistanceFromSelectedNode== currentNodePathCost - 1 || GetNode(x - 1, y).DistanceFromSelectedNode == 0))
         {
            return GetNode(x-1, y);
         }
-        else if ((CheckNodeAvailabilitySW(GetNode(x+1, y)) != TileAvailabilityType.NonExistent && CheckNodeAvailabilityNW(GetNode(x+1, y)) != TileAvailabilityType.Blocked && GetNode(x+1, y).DistanceFromSelectedNode== currentNodePathCost - 1) || GetNode(x + 1, y).DistanceFromSelectedNode == 0)
+        else if (CheckNodeAvailabilitySW(GetNode(x+1, y)) != TileAvailabilityType.NonExistent && (CheckNodeAvailabilitySW(GetNode(x+1, y)) != TileAvailabilityType.Blocked && GetNode(x+1, y).DistanceFromSelectedNode== currentNodePathCost - 1 || GetNode(x + 1, y).DistanceFromSelectedNode == 0))
         {
             return GetNode(x + 1, y);
         }
-        else if ((CheckNodeAvailabilitySE(GetNode(x, y+1)) != TileAvailabilityType.NonExistent && CheckNodeAvailabilityNW(GetNode(x, y+1)) != TileAvailabilityType.Blocked && GetNode(x, y+1).DistanceFromSelectedNode== currentNodePathCost - 1) || GetNode(x, y + 1).DistanceFromSelectedNode == 0)
+        else if (CheckNodeAvailabilitySE(GetNode(x, y+1)) != TileAvailabilityType.NonExistent && (CheckNodeAvailabilitySE(GetNode(x, y+1)) != TileAvailabilityType.Blocked && GetNode(x, y+1).DistanceFromSelectedNode== currentNodePathCost - 1 || GetNode(x, y + 1).DistanceFromSelectedNode == 0))
         {
             return GetNode(x, y +1);
         }
