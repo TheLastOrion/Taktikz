@@ -55,7 +55,7 @@ public class UnitManager : MonoBehaviour
 
     public void SpawnEnemy(Node node, GameObject enemyObject)
     {
-        node.TileAvailability = TileAvailabilityType.OccupiedByEnemies;
+        node.TileAvailability = TileAvailabilityType.Blocked;
         GameObject go = GameObject.Instantiate(enemyObject, GameField.Instance.GetNodeObject(node).transform.position,
             Quaternion.identity, _unitsContainer);
         CharacterBase enemyChar = go.GetComponent<CharacterBase>();

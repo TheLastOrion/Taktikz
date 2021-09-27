@@ -25,21 +25,21 @@ public class Node
         get { return _isTraversedDuringPathfinding; }
         set { _isTraversedDuringPathfinding = value; }
     }
-    private TileAvailabilityType _isTileAvailability = TileAvailabilityType.OutOfRange;
+    private TileAvailabilityType _tileAvailability = TileAvailabilityType.OutOfRange;
     public TileAvailabilityType TileAvailability {
         get
         {
-            return _isTileAvailability;
+            return _tileAvailability;
         } set
         {
-            _isTileAvailability = value;
+            _tileAvailability = value;
         }
 
     }
 
-    public Node(int x, int y, int cellSize, TileAvailabilityType isTileAvailability = TileAvailabilityType.OutOfRange)
+    public Node(int x, int y, int cellSize, TileAvailabilityType tileAvailability = TileAvailabilityType.AvailableForMovement)
     {
-        _isTileAvailability = isTileAvailability;
+        _tileAvailability = tileAvailability;
         _x = x;
         _y = y;
         _cellSize = cellSize;

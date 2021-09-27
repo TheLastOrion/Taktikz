@@ -153,5 +153,10 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
         {
             Select();
         }
+
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            GameField.Instance.GetShortestPathToTargetNode(_node);
+        }
     }
 }

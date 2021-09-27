@@ -30,6 +30,7 @@ public class GameField : MonoBehaviour
     [SerializeField] private int DebugRange;
 
     private Node _currentSelectedNode;
+    private int _dfsCount = 0;
 
     public Node CurrentSelectedNode
     {
@@ -117,8 +118,9 @@ public class GameField : MonoBehaviour
         _grid.ResetAllNodesForPathfinding();
         ClearAllNodeObjectPathCosts();
         ClearNodeObjectHighlights();
-        count = 0;
-        TraverseNeighboursAndSetNodeObjectHighlights(new List<Node>{node}, 3);
+        _dfsCount = 0;
+        TraverseNeighboursAndSetNodeObjectHighlights(new List<Node>{node}, 3, true);
+        
     }
 
     private void ClearAllNodeObjectPathCosts()
@@ -129,20 +131,18 @@ public class GameField : MonoBehaviour
         }
     }
 
-    private int count = 0;
-    public void TraverseNeighboursAndSetNodeObjectHighlights(List<Node> nodes, int range)
+    public void TraverseNeighboursAndSetNodeObjectHighlights(List<Node> nodes, int range, bool highlightTiles = false)
     {
 
-        if (count >= range)
+        if (_dfsCount >= range)
             return;
         foreach (var node in nodes)
         {
-            if (!node.IsTraversedDuringPathfinding)
+            if (!node.IsTraversedDuringPathfinding && node.TileAvailability != TileAvailabilityType.Blocked)
             {
                 node.IsTraversedDuringPathfinding = true;
-                node.DistanceFromSelectedNode = count;
-                NodeObjectDictionary[new Vector2(node.GetXCoord(), node.GetYCoord())].GetComponent<NodeObject>().AssignPathCostText((count).ToString());
-
+                node.DistanceFromSelectedNode = _dfsCount;
+                NodeObjectDictionary[new Vector2(node.GetXCoord(), node.GetYCoord())].GetComponent<NodeObject>().AssignPathCostText((_dfsCount).ToString());
             }
         }
         
@@ -153,7 +153,16 @@ public class GameField : MonoBehaviour
             var copyList = _grid.GetNeighboringNodes(node.GetXCoord(), node.GetYCoord());
             foreach (var node1 in copyList)
             {
-                currentLevelNeighbors.Add(node1);
+                if (node1.TileAvailability != TileAvailabilityType.Blocked)
+                {
+                    currentLevelNeighbors.Add(node1);
+                }
+
+                else if (node1.TileAvailability == TileAvailabilityType.Blocked)
+                {
+                    NodeObjectDictionary[new Vector2(node1.GetXCoord(), node1.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Blocked);
+
+                }
             }
         }
 
@@ -165,35 +174,42 @@ public class GameField : MonoBehaviour
                  currentLevelNeighbor.TileAvailability != TileAvailabilityType.OccupiedByFriends))
             {
                 currentLevelNeighbor.IsTraversedDuringPathfinding = true;
-                currentLevelNeighbor.DistanceFromSelectedNode = count + 1;
-                NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().AssignPathCostText((count + 1).ToString() );
-                NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Available); 
+                currentLevelNeighbor.DistanceFromSelectedNode = _dfsCount + 1;
+                NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().AssignPathCostText((_dfsCount + 1).ToString() );
+                if (highlightTiles)
+                {
+                    NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
+                }
 
 
             }
-            if (currentLevelNeighbor.TileAvailability == TileAvailabilityType.Blocked ||
+            if ((currentLevelNeighbor.TileAvailability == TileAvailabilityType.Blocked ||
                 currentLevelNeighbor.TileAvailability == TileAvailabilityType.OccupiedByEnemies||
-                currentLevelNeighbor.TileAvailability == TileAvailabilityType.OccupiedByFriends)
+                currentLevelNeighbor.TileAvailability == TileAvailabilityType.OccupiedByFriends) && highlightTiles)
             {
                 NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Blocked);
             }
         }
 
-        count++;
-        TraverseNeighboursAndSetNodeObjectHighlights(currentLevelNeighbors, range);
+        _dfsCount++;
+        TraverseNeighboursAndSetNodeObjectHighlights(currentLevelNeighbors, range, highlightTiles);
     }
 
-    public List<Node> GetShortestPathToTargetNode(Node nodeStart, Node nodeEnd)
+    public List<Node> GetShortestPathToTargetNode(Node nodeEnd)
     {
+        Node nodeToAdd;
         List<Node> pathList = new List<Node>();
-        for (int i = nodeEnd.DistanceFromSelectedNode; i >= 0; i--)
+        // nodeToAdd = nodeEnd;
+        pathList.Add(nodeEnd);
+        for (int i = nodeEnd.DistanceFromSelectedNode; i > 0; i--)
         {
-
+            pathList.Add(_grid.GetNeighborWithLowestCost(pathList[pathList.Count -1].GetXCoord(),pathList[pathList.Count -1].GetYCoord(), i ));
         }
+        
 
         return pathList;
     }
-
+    
     public void HighlightDebug()
     {
         for (int i = 0; i < _width; i++)
