@@ -19,7 +19,7 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
     private HighlightTypes _currentHighlight;
     private MeshRenderer _outlineRenderer;
     private MeshRenderer _highlightRenderer;
-
+    
     private void Start()
     {
         _outlineRenderer = _outlineObject.GetComponent<MeshRenderer>();
@@ -113,10 +113,7 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
         GameField.Instance.CurrentSelectedNode = _node;
         GameEvents.FireNodeSelected(_node);
         //Debug.LogFormat("Node Selected  X:{0}  Y:{1} ", _node.GetXCoord(), _node.GetYCoord());
-        GameField._grid.CheckNodeAvailabilityNE(_node);
-        GameField._grid.CheckNodeAvailabilityNW(_node);
-        GameField._grid.CheckNodeAvailabilitySE(_node);
-        GameField._grid.CheckNodeAvailabilitySW(_node);
+
         return this;
     }
 
@@ -125,7 +122,6 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
         GameField.Instance.CurrentSelectedNode = null;
     }
     
-
     public void SetNode(Node node)
     {
         _node = node;
@@ -134,6 +130,11 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
     public Node GetNode()
     {
         return _node;
+    }
+
+    public CharacterBase GetCharType()
+    {
+        return null;
     }
 
     public HighlightTypes GetHighlightType()
@@ -156,7 +157,7 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
 
         if (eventData.button == PointerEventData.InputButton.Right)
         {
-            GameField.Instance.GetShortestPathToTargetNode(_node);
+            GameEvents.FireMoveCommandIssued(GameField.Instance.CurrentSelectedNode, _node);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Assets.Scripts.Interfaces;
 using Enumerations;
+using NUnit.Framework.Api;
 using UnityEngine;
 
 public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
@@ -13,18 +14,24 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
     [SerializeField]private float _moveAnimationSpeed;
     [SerializeField]private int _baseAttackDamage;
     [SerializeField] private PlayerType _playerType;
-    private Node _currentNode;
-
-    public Node CurrentNode
+    private string _characterName;
+    public string CharacterName
     {
-        get { return _currentNode; }
-        set { _currentNode = value; }
+        get { return _characterName;}
+        set { _characterName = value; }
     }
+    private Coroutine _moveCoroutine;
+    //private Node _currentNode;
+
+    //public Node CurrentNode
+    //{
+    //    get { return _currentNode; }
+    //    set { _currentNode = value; }
+    //}
     #endregion
 
     private Animator _animatorController;
 
-    private Node _currentResidingNode;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,10 +44,16 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         
     }
 
-    public IEnumerator MoveToNode(List<Node> path, bool rotate = true)
+    public void MoveToNode(List<Node> path, bool rotate = true)
     {
+        _moveCoroutine = StartCoroutine(MoveToNodeCoroutine(path, rotate));
+    }
+    public IEnumerator MoveToNodeCoroutine(List<Node> path, bool rotate = true)
+    {
+        GameEvents.FireCharacterMoveStarted(this, path[path.Count - 1], path[0]);
+
         _animatorController.SetBool("Run", true);
-        for (int i = 0; i < path.Count;)
+        for (int i = path.Count - 1 ; i >= 0 ;)
         {
             Vector3 targetPos =
                 GameField.Instance.GetNodePosition(path[i].GetXCoord(), path[i].GetYCoord());
@@ -62,11 +75,13 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
             }
             else
             {
-                i++;
+                i--;
                 yield return new WaitForFixedUpdate();
             }
         }
         _animatorController.SetBool("Run", false);
+        GameEvents.FireCharacterMoveCompleted(this, path[path.Count - 1], path[0]);
+
     }
 
     public void RotateTowards(Node nextNode)
@@ -100,9 +115,10 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
             GameField.Instance.GetNodeFromGrid(0, 3),
             GameField.Instance.GetNodeFromGrid(0, 4),
         };
-         moveCoroutine = StartCoroutine(MoveToNode(DebugList));
+         moveCoroutine = StartCoroutine(MoveToNodeCoroutine(DebugList));
 
     }
+
 
 
     public void Attack(CharacterBase defendingChar)

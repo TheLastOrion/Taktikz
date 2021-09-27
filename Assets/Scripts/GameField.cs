@@ -38,6 +38,7 @@ public class GameField : MonoBehaviour
         set { _currentSelectedNode = value; }
     }
     public Dictionary<Vector2, GameObject> NodeObjectDictionary = new Dictionary<Vector2, GameObject>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,6 +55,7 @@ public class GameField : MonoBehaviour
         UIEvents.CoordsVisibilityChanged += UIEvents_CoordsVisibilityChanged; 
         UIEvents.PathCostVisibilityChanged += UIEvents_PathCostVisibilityChanged;
         GameEvents.NodeSelected += GameEvents_NodeSelected;
+        GameEvents.FireGridInitialized(_grid);
 
     }
 
@@ -83,6 +85,7 @@ public class GameField : MonoBehaviour
         }
     }
 
+    
     private void UIEvents_GridVisibilityChanged(bool isVisible)
     {
         SetAllNodesVisibility(isVisible);
@@ -138,7 +141,8 @@ public class GameField : MonoBehaviour
             return;
         foreach (var node in nodes)
         {
-            if (!node.IsTraversedDuringPathfinding && node.TileAvailability != TileAvailabilityType.Blocked)
+            /// Check for dfs_count to negate blocking on home tile
+            if ((!node.IsTraversedDuringPathfinding && node.TileAvailability != TileAvailabilityType.Blocked )|| _dfsCount == 0)
             {
                 node.IsTraversedDuringPathfinding = true;
                 node.DistanceFromSelectedNode = _dfsCount;
@@ -197,9 +201,7 @@ public class GameField : MonoBehaviour
 
     public List<Node> GetShortestPathToTargetNode(Node nodeEnd)
     {
-        Node nodeToAdd;
         List<Node> pathList = new List<Node>();
-        // nodeToAdd = nodeEnd;
         pathList.Add(nodeEnd);
         for (int i = nodeEnd.DistanceFromSelectedNode; i > 0; i--)
         {
