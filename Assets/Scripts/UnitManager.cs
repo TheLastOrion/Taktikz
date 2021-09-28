@@ -64,8 +64,9 @@ public class UnitManager : MonoBehaviour
                 List<Node> path = GameField.Instance.GetShortestPathToTargetNode(shortestNeighboringNodeForAttack);
                 if (path.Count > 0)
                 {
-                    path.RemoveAt(path.Count-1);
+                    //path.RemoveAt(path.Count-1);
                     movingChar.MoveToNode(path);
+                    //CharactersByNodes.Remove(startNode);
                     movingChar.Attack(blockingChar);
                 }
             }
@@ -81,13 +82,16 @@ public class UnitManager : MonoBehaviour
             CharacterBase moveChar = CharactersByNodes[startNode];
             List<Node> path = GameField.Instance.GetShortestPathToTargetNode(endNode);
             moveChar.MoveToNode(path);
+            //CharactersByNodes.Remove(startNode);
+
         }
-        
-        
+
+
     }
 
     private void GameEvents_CharacterMoveCompleted(CharacterBase character, Node startNode, Node endNode)
     {
+        CharactersByNodes.Remove(startNode);
         CharactersByNodes[endNode] = character;
     }
 

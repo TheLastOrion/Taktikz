@@ -57,7 +57,7 @@ public class GameField : MonoBehaviour
         UIEvents.PathCostVisibilityChanged += UIEvents_PathCostVisibilityChanged;
         GameEvents.NodeSelected += GameEvents_NodeSelected;
         GameEvents.CharacterMoveCompleted += GameEvents_CharacterMoveCompleted;
-        GameEvents.CharacterMoveStarted += GameEvents_CharacterMoveStarted; ;
+        GameEvents.CharacterMoveStarted += GameEvents_CharacterMoveStarted; 
         GameEvents.FireGridInitialized(_grid);
 
     }
