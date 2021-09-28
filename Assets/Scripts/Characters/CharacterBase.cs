@@ -20,7 +20,7 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         get { return _characterName;}
         set { _characterName = value; }
     }
-    private Coroutine _moveCoroutine;
+    private Coroutine _currentCoroutine;
     //private Node _currentNode;
 
     //public Node CurrentNode
@@ -46,7 +46,7 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
 
     public void MoveToNode(List<Node> path, bool rotate = true)
     {
-        _moveCoroutine = StartCoroutine(MoveToNodeCoroutine(path, rotate));
+        _currentCoroutine = StartCoroutine(MoveToNodeCoroutine(path, rotate));
     }
     public IEnumerator MoveToNodeCoroutine(List<Node> path, bool rotate = true)
     {
@@ -130,8 +130,17 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         }
         else
         {
-            
+            _currentCoroutine = StartCoroutine(AttackCoroutine(defendingChar));
         }
+
+    }
+
+    public IEnumerator AttackCoroutine(CharacterBase defendingChar)
+    {
+        _animatorController.SetTrigger("Melee Right Attack 1");
+        yield return new WaitForSeconds(1);
+        defendingChar._hitPoints -= _baseAttackDamage;
+        Debug.LogFormat("{0} attacks {1}",this.gameObject.name, defendingChar.gameObject.name);
 
     }
 

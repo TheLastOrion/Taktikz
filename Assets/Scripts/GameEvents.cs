@@ -1,4 +1,5 @@
 ﻿using System;
+using Assets.Scripts.Interfaces;
 using UnityEngine;
 
 public class GameEvents
@@ -6,7 +7,7 @@ public class GameEvents
     public static event Action<Node> NodeSelected;
     public static event Action<CharacterBase, Node, Node> CharacterMoveStarted;
     public static event Action<CharacterBase, Node, Node> CharacterMoveCompleted;
-    public static event Action<Node, Node> MoveCommandIssued;
+    public static event Action<IMoveCapable, Node, Node> MoveCommandIssued;
     public static event Action<MyGrid> GridInitialized; 
 
     public static void FireNodeSelected(Node node)
@@ -33,11 +34,11 @@ public class GameEvents
         }
     }
 
-    public static void FireMoveCommandIssued(Node startNode, Node endNode)
+    public static void FireMoveCommandIssued(IMoveCapable moveCapable, Node startNode, Node endNode)
     {
         if (MoveCommandIssued != null)
         {
-            MoveCommandIssued(startNode, endNode);
+            MoveCommandIssued(moveCapable, startNode, endNode);
         }
     }
 

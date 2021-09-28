@@ -156,7 +156,7 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
 
         if (eventData.button == PointerEventData.InputButton.Right)
         {
-            GameEvents.FireMoveCommandIssued(GameField.Instance.CurrentSelectedNode, _node);
+            GameEvents.FireMoveCommandIssued(UnitManager.Instance.CharactersByNodes[GameField.Instance.CurrentSelectedNode],GameField.Instance.CurrentSelectedNode, _node);
         }
     }
 }

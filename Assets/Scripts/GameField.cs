@@ -223,7 +223,7 @@ public class GameField : MonoBehaviour
         pathList.Add(nodeEnd);
         for (int i = nodeEnd.DistanceFromSelectedNode; i > 0; i--)
         {
-            pathList.Add(_grid.GetNeighborWithLowestCost(pathList[pathList.Count -1].GetXCoord(),pathList[pathList.Count -1].GetYCoord(), i ));
+            pathList.Add(_grid.GetNeighborWithLowestCostProgressive(pathList[pathList.Count -1].GetXCoord(),pathList[pathList.Count -1].GetYCoord(), i ));
         }
         
 

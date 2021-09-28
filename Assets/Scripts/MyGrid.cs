@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using Enumerations;
 using UnityEngine;
@@ -86,7 +87,56 @@ public class MyGrid
 
     }
 
-    public Node GetNeighborWithLowestCost(int x, int y, int currentNodePathCost)
+    public Node GetNeighborWithLowestCostSingle(int x, int y)
+    {
+        Node node = new Node(-1, -1, 0, TileAvailabilityType.NonExistent);
+        int min = 9999;
+        if (CheckNodeAvailabilityNW(GetNode(x, y)) != TileAvailabilityType.NonExistent && (CheckNodeAvailabilityNW(GetNode(x, y)) != TileAvailabilityType.Blocked))
+        {
+            node =  GetNode(x, y-1);
+            if (node.DistanceFromSelectedNode < min && node.DistanceFromSelectedNode > 0)
+            {
+                min = node.DistanceFromSelectedNode;
+            }
+        }
+        if (CheckNodeAvailabilityNE(GetNode(x, y)) != TileAvailabilityType.NonExistent && (CheckNodeAvailabilityNE(GetNode(x, y)) != TileAvailabilityType.Blocked))
+        {
+            if (GetNode(x - 1, y).DistanceFromSelectedNode < min && GetNode(x - 1, y).DistanceFromSelectedNode > 0)
+            {
+                node =  GetNode(x - 1, y);
+                min = node.DistanceFromSelectedNode;
+
+            }
+        }
+        if (CheckNodeAvailabilitySW(GetNode(x, y)) != TileAvailabilityType.NonExistent && (CheckNodeAvailabilitySW(GetNode(x, y)) != TileAvailabilityType.Blocked))
+        {
+            if (GetNode(x + 1, y).DistanceFromSelectedNode < min && GetNode(x + 1, y).DistanceFromSelectedNode > 0)
+            {
+                node = GetNode(x + 1, y);
+                min = node.DistanceFromSelectedNode;
+            }
+        }
+        if (CheckNodeAvailabilitySE(GetNode(x, y)) != TileAvailabilityType.NonExistent && (CheckNodeAvailabilitySE(GetNode(x, y)) != TileAvailabilityType.Blocked))
+        {
+            if (GetNode(x, y+1).DistanceFromSelectedNode < min && GetNode(x, y+1).DistanceFromSelectedNode > 0)
+            {
+                node = GetNode(x, y + 1);
+                min = node.DistanceFromSelectedNode;
+            }
+        }
+
+        if (node.GetXCoord() != -1)
+        {
+            return node;
+        }
+        else
+        {
+            Debug.LogFormat("Singular Neighbor with lowest cost couldn't be found for X: {0} Y: {1}",x, y);
+            return null;
+        }
+
+    }
+    public Node GetNeighborWithLowestCostProgressive(int x, int y, int currentNodePathCost)
     {
         if (CheckNodeAvailabilityNW(GetNode(x, y)) != TileAvailabilityType.NonExistent && (CheckNodeAvailabilityNW(GetNode(x, y)) != TileAvailabilityType.Blocked && GetNode(x, y-1).DistanceFromSelectedNode== currentNodePathCost - 1 || GetNode(x, y - 1).DistanceFromSelectedNode == 0))
         {

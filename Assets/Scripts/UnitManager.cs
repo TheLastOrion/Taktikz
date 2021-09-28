@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using Assets.Scripts.Interfaces;
 using Enumerations;
 using NUnit.Framework.Interfaces;
 using UnityEngine;
@@ -36,17 +37,53 @@ public class UnitManager : MonoBehaviour
         GameEvents.MoveCommandIssued += GameEvents_MoveCommandIssued;
     }
 
-    private void GameEvents_MoveCommandIssued(Node startNode, Node endNode)
+    private void GameEvents_MoveCommandIssued(IMoveCapable moveCapable, Node startNode, Node endNode)
     {
+        CharacterBase movingChar = (CharacterBase)moveCapable;
         if (GameField.Instance.GetNodeFromGrid(endNode.GetXCoord(), endNode.GetYCoord()).TileAvailability ==
             TileAvailabilityType.Blocked)
         {
-            Debug.LogError("The end node for this movement is blocked!");
-            return;
+            if (CharactersByNodes.ContainsKey(
+                    GameField.Instance.GetNodeFromGrid(endNode.GetXCoord(), endNode.GetYCoord())) &&
+                CharactersByNodes[GameField.Instance.GetNodeFromGrid(endNode.GetXCoord(), endNode.GetYCoord())]
+                    .GetPlayerType() != movingChar.GetPlayerType())
+            {
+                
+                Node shortestNeighboringNodeForAttack = GameField._grid.GetNeighborWithLowestCostSingle(endNode.GetXCoord(), endNode.GetYCoord());
+                // CharacterBase moveChar = CharactersByNodes[startNode];
+                CharacterBase blockingChar;
+                if (CharactersByNodes.ContainsKey(endNode))
+                {
+                    blockingChar = CharactersByNodes[endNode];
+                }
+                else
+                {
+                    Debug.LogErrorFormat("Defending Character not found, likely a bug!");
+                    return;
+                }
+                List<Node> path = GameField.Instance.GetShortestPathToTargetNode(shortestNeighboringNodeForAttack);
+                if (path.Count > 0)
+                {
+                    path.RemoveAt(path.Count-1);
+                    movingChar.MoveToNode(path);
+                    movingChar.Attack(blockingChar);
+                }
+            }
+            else
+            {
+                Debug.LogError("The end node for this movement is blocked! Likely by a creature of the same type as mover");
+                return;
+            }
+            
         }
-        CharacterBase moveChar = CharactersByNodes[startNode];
-        List<Node> path = GameField.Instance.GetShortestPathToTargetNode(endNode);
-        moveChar.MoveToNode(path);
+        else
+        {
+            CharacterBase moveChar = CharactersByNodes[startNode];
+            List<Node> path = GameField.Instance.GetShortestPathToTargetNode(endNode);
+            moveChar.MoveToNode(path);
+        }
+        
+        
     }
 
     private void GameEvents_CharacterMoveCompleted(CharacterBase character, Node startNode, Node endNode)
