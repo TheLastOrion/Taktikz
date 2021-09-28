@@ -65,9 +65,10 @@ public class UnitManager : MonoBehaviour
                 if (path.Count > 0)
                 {
                     //path.RemoveAt(path.Count-1);
-                    movingChar.MoveToNode(path);
+                    //movingChar.MoveToNode(path);
                     //CharactersByNodes.Remove(startNode);
-                    movingChar.Attack(blockingChar);
+                    //movingChar.Attack(blockingChar);
+                    movingChar.MoveToNodeAndAttack(path, blockingChar, endNode);
                 }
             }
             else

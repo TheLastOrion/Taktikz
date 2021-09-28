@@ -1,11 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using Enumerations;
-using NUnit.Framework.Interfaces;
-using UnityEditor.Experimental;
 using UnityEngine;
-using UnityEngine.Scripting;
-using UnityEngine.UI;
 
 public class GameField : MonoBehaviour
 {

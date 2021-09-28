@@ -4,7 +4,7 @@
     {
         void Attack(ICombatCapable defendingChar);
         void Die();
-        void TakeDamage();
+        void TakeDamage(int damage);
 
     }
 }
