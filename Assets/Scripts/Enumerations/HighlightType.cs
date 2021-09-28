@@ -1,6 +1,6 @@
 ﻿namespace Enumerations
 {
-    public enum HighlightTypes
+    public enum HighlightType
     {
         #region Node Highlight Types
 

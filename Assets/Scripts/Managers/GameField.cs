@@ -180,7 +180,7 @@ public class GameField : MonoBehaviour
 
                 else if (node1.TileAvailability == TileAvailabilityType.Blocked)
                 {
-                    NodeObjectDictionary[new Vector2(node1.GetXCoord(), node1.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Blocked);
+                    NodeObjectDictionary[new Vector2(node1.GetXCoord(), node1.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightType.Blocked);
 
                 }
             }
@@ -198,7 +198,7 @@ public class GameField : MonoBehaviour
                 NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().AssignPathCostText((_dfsCount + 1).ToString() );
                 if (highlightTiles)
                 {
-                    NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Available);
+                    NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightType.Available);
                 }
 
 
@@ -207,7 +207,7 @@ public class GameField : MonoBehaviour
                 currentLevelNeighbor.TileAvailability == TileAvailabilityType.OccupiedByEnemies||
                 currentLevelNeighbor.TileAvailability == TileAvailabilityType.OccupiedByFriends) && highlightTiles)
             {
-                NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightTypes.Blocked);
+                NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightType.Blocked);
             }
         }
 
@@ -234,7 +234,7 @@ public class GameField : MonoBehaviour
         {
             for (int j = 0; j < _height; j++)
             {
-                NodeObjectDictionary[new Vector2(i,j)].GetComponent<NodeObject>().Highlight((HighlightTypes)Random.Range(2, 5));
+                NodeObjectDictionary[new Vector2(i,j)].GetComponent<NodeObject>().Highlight((HighlightType)Random.Range(2, 5));
             }
         }
     }
@@ -242,7 +242,7 @@ public class GameField : MonoBehaviour
     {
         foreach (var value in NodeObjectDictionary.Values)
         {
-            value.gameObject.GetComponent<NodeObject>().Highlight(HighlightTypes.None);
+            value.gameObject.GetComponent<NodeObject>().Highlight(HighlightType.None);
         }
     }
 

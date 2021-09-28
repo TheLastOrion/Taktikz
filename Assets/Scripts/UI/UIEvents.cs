@@ -8,7 +8,7 @@ public class UIEvents
     public static event Action<bool> CoordsVisibilityChanged;
     public static event Action SpawnEnemiesButtonPressed;
     public static event Action SpawnAlliesButtonPressed;
-
+    public static event Action SkipUnitTurnButtonPressed; 
     public static void FireGridVisibilityChanged(bool isOn)
     {
         if (GridVisibilityChanged != null)
@@ -48,6 +48,16 @@ public class UIEvents
             SpawnAlliesButtonPressed();
         }
     }
+
+    public static void FireSkipUnitTurnButtonPressed()
+    {
+        if (SkipUnitTurnButtonPressed != null)
+        {
+            SkipUnitTurnButtonPressed();
+        }
+    }
+
+
 
 
 }

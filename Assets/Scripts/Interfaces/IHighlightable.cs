@@ -5,6 +5,6 @@ namespace Interfaces
 {
     public interface IHighlightable
     {
-        void Highlight(HighlightTypes highlightType);
+        void Highlight(HighlightType highlightType);
     }
 }

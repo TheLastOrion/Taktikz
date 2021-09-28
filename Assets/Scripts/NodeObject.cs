@@ -16,7 +16,7 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
     [SerializeField]private GameObject _highlightObject;
     [SerializeField]private TextMeshPro _coordsText;
     [SerializeField]private TextMeshPro _moveCostText;
-    private HighlightTypes _currentHighlight;
+    private HighlightType _currentHighlight;
     private MeshRenderer _outlineRenderer;
     private MeshRenderer _highlightRenderer;
     
@@ -32,7 +32,7 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
         _coordsText.text = s.ToString();
         s.Clear();
         this.GetComponent<BoxCollider>().size = new Vector3(1, _outlineObject.transform.localScale.y, 1);
-        _currentHighlight = HighlightTypes.None;
+        _currentHighlight = HighlightType.None;
     }
 
     // Start is called before the first frame update
@@ -42,7 +42,7 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
     {
         // Change the color of the GameObject to red when the mouse is over GameObject
         //_outlineRenderer.material = GameField.Instance.HighlightNodeMaterial;
-        Highlight(HighlightTypes.Hover);
+        Highlight(HighlightType.Hover);
     }
 
     void OnMouseExit()
@@ -80,23 +80,23 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
     {
         _moveCostText.text = cost;
     }
-    public void Highlight(HighlightTypes highlightType)
+    public void Highlight(HighlightType highlightType)
     {
         switch (highlightType)
         {
-            case HighlightTypes.None:
+            case HighlightType.None:
                 _outlineRenderer.material = GameField.Instance.StandardNodeMaterial;
                 break;
-            case HighlightTypes.Hover:
+            case HighlightType.Hover:
                 _highlightRenderer.enabled = true;
                 break;
-            case HighlightTypes.Attackable:
+            case HighlightType.Attackable:
                 _outlineRenderer.material = GameField.Instance.AttackableNodeMaterial;
                 break;
-            case HighlightTypes.Available:
+            case HighlightType.Available:
                 _outlineRenderer.material = GameField.Instance.AvailableNodeMaterial;
                 break;
-            case HighlightTypes.Blocked:
+            case HighlightType.Blocked:
                 _outlineRenderer.material = GameField.Instance.BlockedNodeMaterial;
                 break;
 
@@ -136,12 +136,12 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
         return null;
     }
 
-    public HighlightTypes GetHighlightType()
+    public HighlightType GetHighlightType()
     {
         return _currentHighlight;
     }
 
-    public void SetHighlightType(HighlightTypes highlightType)
+    public void SetHighlightType(HighlightType highlightType)
     {
         _currentHighlight = highlightType;
     }

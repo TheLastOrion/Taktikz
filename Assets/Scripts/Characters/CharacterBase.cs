@@ -208,6 +208,7 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         }
 
         _damageText.text = "";
+        _damageTextObject.transform.localPosition = GeneralConstants.DAMAGE_TEXT_DEFAULT_POSITION_VECTOR;
     }
 
     public void Die()
