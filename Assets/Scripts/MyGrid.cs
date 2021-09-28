@@ -66,23 +66,7 @@ public class MyGrid
             nodeList.Add(GetNode(x, y +1));
         }
         
-        // if (CheckNodeAvailabilityNW(GetNode(x, y)) == TileAvailabilityType.AvailableForMovement)
-        // {
-        //     nodeList.Add(GetNode(x, y-1));
-        // }
-        // if (CheckNodeAvailabilityNE(GetNode(x, y)) ==TileAvailabilityType.AvailableForMovement)
-        // {
-        //     nodeList.Add(GetNode(x-1, y));
-        // }
-        // if (CheckNodeAvailabilitySW(GetNode(x, y)) == TileAvailabilityType.AvailableForMovement)
-        // {
-        //     nodeList.Add(GetNode(x + 1, y));
-        // }
-        // if (CheckNodeAvailabilitySE(GetNode(x, y)) == TileAvailabilityType.AvailableForMovement)
-        // {
-        //     nodeList.Add(GetNode(x, y +1));
-        // }
-
+        
         return nodeList;
 
     }
@@ -158,26 +142,7 @@ public class MyGrid
         {
             return GetNode(x, y);
         }
-        // if (CheckNodeAvailabilityNW(GetNode(x, y)) == TileAvailabilityType.AvailableForMovement && GetNode(x, y-1).DistanceFromSelectedNode== currentNodePathCost - 1)
-        // {
-        //     return GetNode(x, y-1);
-        // }
-        // else if (CheckNodeAvailabilityNE(GetNode(x, y)) != TileAvailabilityType.AvailableForMovement && CheckNodeAvailabilityNW(GetNode(x, y)) != TileAvailabilityType.Blocked && GetNode(x-1, y).DistanceFromSelectedNode== currentNodePathCost - 1)
-        // {
-        //     return GetNode(x-1, y);
-        // }
-        // else if (CheckNodeAvailabilitySW(GetNode(x, y)) != TileAvailabilityType.AvailableForMovement && CheckNodeAvailabilityNW(GetNode(x, y)) != TileAvailabilityType.Blocked && GetNode(x+1, y).DistanceFromSelectedNode== currentNodePathCost - 1)
-        // {
-        //     return GetNode(x + 1, y);
-        // }
-        // else if (CheckNodeAvailabilitySE(GetNode(x, y)) != TileAvailabilityType.AvailableForMovement && CheckNodeAvailabilityNW(GetNode(x, y)) != TileAvailabilityType.Blocked && GetNode(x, y+1).DistanceFromSelectedNode== currentNodePathCost - 1)
-        // {
-        //     return GetNode(x, y +1);
-        // }
-        // else if (currentNodePathCost == 0)
-        // {
-        //     return GetNode(x, y);
-        // }
+        
         else
         {
             Debug.LogErrorFormat("No neighbor for node X: {0} Y:{1} has a lowest cost neighbor, likely an error occured", x, y);

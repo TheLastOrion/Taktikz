@@ -1,5 +1,6 @@
 ﻿using System;
 using Assets.Scripts.Interfaces;
+using Enumerations;
 using UnityEngine;
 
 public class GameEvents
@@ -12,6 +13,7 @@ public class GameEvents
     public static event Action<ICombatCapable, ICombatCapable> AttackCompleted;
     public static event Action<ICombatCapable> CharacterDied; 
     public static event Action<MyGrid> GridInitialized;
+    public static event Action<TurnType> TurnChanged; 
     public static event Action GameLost; 
     public static event Action GameWon; 
     public static void FireNodeSelected(Node node)
@@ -91,6 +93,14 @@ public class GameEvents
         if (GameLost != null)
         {
             GameLost();
+        }
+    }
+
+    public static void FireTurnChanged(TurnType newTurn)
+    {
+        if (TurnChanged != null)
+        {
+            TurnChanged(newTurn);
         }
     }
 

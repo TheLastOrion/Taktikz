@@ -16,7 +16,6 @@ public class GameField : MonoBehaviour
     [SerializeField]private GameObject _nodePrefab;
     [SerializeField] public GameObject DamageTextPrefab;
 
-
     [SerializeField]private int _width;
     [SerializeField]private int _height;
     [SerializeField]private int _cellSize;

@@ -35,19 +35,16 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
         _currentHighlight = HighlightType.None;
     }
 
-    // Start is called before the first frame update
 
 
     void OnMouseOver()
     {
-        // Change the color of the GameObject to red when the mouse is over GameObject
         //_outlineRenderer.material = GameField.Instance.HighlightNodeMaterial;
         Highlight(HighlightType.Hover);
     }
 
     void OnMouseExit()
     {
-        // Reset the color of the GameObject back to normal
         //_outlineRenderer.material = GameField.Instance.StandardNodeMaterial;
         UnHighlight();
     }
@@ -110,6 +107,7 @@ public class NodeObject : MonoBehaviour, ISelectable, IHighlightable, IPointerCl
 
     public ISelectable Select()
     {
+
         GameEvents.FireNodeSelected(_node);
         //Debug.LogFormat("Node Selected  X:{0}  Y:{1} ", _node.GetXCoord(), _node.GetYCoord());
 
