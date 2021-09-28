@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Assets.Scripts.Interfaces;
 using Enumerations;
-using NUnit.Framework.Api;
 using TMPro;
 using UnityEngine;
 
@@ -16,8 +15,11 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
     [SerializeField]private int _baseAttackDamage;
     [SerializeField]private PlayerType _playerType;
     private string _characterName;
+    private Quaternion _previousRotation;
     private GameObject _damageTextObject;
     private TextMeshPro _damageText;
+    private bool _hasActionLeft;
+
     public string CharacterName
     {
         get { return _characterName;}
@@ -34,6 +36,11 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         set { _playerType = value; }
     }
 
+    public bool HasActionLeft
+    {
+        get { return _hasActionLeft; }
+        set { _hasActionLeft = value; }
+    }
     public int MovementRange
     {
         get { return _movementRange; }
@@ -53,12 +60,14 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
     // Start is called before the first frame update
     void Start()
     {
+        _hasActionLeft = true;
         _animatorController = GetComponent<Animator>();
         _damageTextObject = GameObject.Instantiate(GameField.Instance.DamageTextPrefab, this.gameObject.transform.position, Quaternion.Euler(0,-135,0), this.gameObject.transform);
         _damageTextObject.transform.localPosition = Vector3.one * 1.5f;
         _damageText = _damageTextObject.GetComponent<TextMeshPro>();
+        _previousRotation = transform.rotation;
     }
-
+    
     // Update is called once per frame
     void Update()
     {
@@ -100,7 +109,8 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
     {
         _currentCoroutine = StartCoroutine(MoveToNodeCoroutine(path, rotate));
     }
-    public IEnumerator MoveToNodeCoroutine(List<Node> path, bool rotate = true)
+
+    public IEnumerator MoveToNodeCoroutine(List<Node> path, bool rotate = true, bool isMoveAndAttack = false)
     {
         GameEvents.FireCharacterMoveStarted(this, path[path.Count - 1], path[0]);
 
@@ -110,7 +120,7 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
             Vector3 targetPos =
                 GameField.Instance.GetNodePosition(path[i].GetXCoord(), path[i].GetYCoord());
 
-            if (rotate )
+            if (rotate && _previousRotation.Equals(transform.rotation) )
             {
                 RotateTowards(path[i]);
             }
@@ -132,6 +142,10 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
             }
         }
         _animatorController.SetBool("Run", false);
+        if (!isMoveAndAttack)
+        {
+            _hasActionLeft = false;
+        }
         GameEvents.FireCharacterMoveCompleted(this, path[path.Count - 1], path[0]);
 
     }
@@ -142,6 +156,7 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         if (rotate)
         {
             RotateTowards(defenderNode);
+
         }
         yield return AttackCoroutine(defender);
     }
@@ -156,6 +171,8 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         Vector3 direction = targetPos - transform.position;
         Quaternion rotation = Quaternion.LookRotation(direction);
         transform.rotation = rotation;
+        _previousRotation = rotation;
+
     }
 
 
@@ -185,6 +202,7 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         yield return new WaitForSeconds(1);
         defendingChar.TakeDamage(_baseAttackDamage);
         Debug.LogFormat("{0} attacks {1} for {2} damage! {1} has {3} hitpoints left!",this.gameObject.name, defendingChar.gameObject.name, _baseAttackDamage, _hitPoints - _baseAttackDamage);
+        _hasActionLeft = false;
         GameEvents.FireAttackCompleted(this, defender);
 
     }

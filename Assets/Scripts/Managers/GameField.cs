@@ -53,12 +53,14 @@ public class GameField : MonoBehaviour
         UIEvents.GridVisibilityChanged += UIEvents_GridVisibilityChanged;
         UIEvents.CoordsVisibilityChanged += UIEvents_CoordsVisibilityChanged; 
         UIEvents.PathCostVisibilityChanged += UIEvents_PathCostVisibilityChanged;
+
         GameEvents.NodeSelected += GameEvents_NodeSelected;
         GameEvents.CharacterMoveCompleted += GameEvents_CharacterMoveCompleted;
         GameEvents.CharacterMoveStarted += GameEvents_CharacterMoveStarted; 
         GameEvents.FireGridInitialized(_grid);
 
     }
+
 
     private void GameEvents_CharacterMoveStarted(CharacterBase arg1, Node arg2, Node arg3)
     {
@@ -129,7 +131,8 @@ public class GameField : MonoBehaviour
     private void GameEvents_NodeSelected(Node node)
     {
         if (UnitManager.Instance.CharactersByNodes.ContainsKey(node) &&
-            UnitManager.Instance.CharactersByNodes[node].GetPlayerType() == PlayerType.Player)
+            UnitManager.Instance.CharactersByNodes[node].GetPlayerType() == PlayerType.Player &&
+            UnitManager.Instance.CharactersByNodes[node].HasActionLeft)
         {
             Debug.LogFormat("Node Selected: X:{0}  Y:{1}", node.GetXCoord(), node.GetYCoord());
             _grid.ResetAllNodesForPathfinding();

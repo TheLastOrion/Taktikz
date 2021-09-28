@@ -35,12 +35,23 @@ public class UnitManager : MonoBehaviour
         GameEvents.GridInitialized += GameEvents_GridInitialized;
         UIEvents.SpawnEnemiesButtonPressed += UIEvents_SpawnEnemiesButtonPressed;
         UIEvents.SpawnAlliesButtonPressed += UIEvents_SpawnAlliesButtonPressed;
+        UIEvents.SkipUnitTurnButtonPressed += UIEvents_SkipUnitTurnButtonPressed;
+
         GameEvents.CharacterMoveStarted += GameEvents_CharacterMoveStarted; ;
         GameEvents.CharacterMoveCompleted += GameEvents_CharacterMoveCompleted;
         GameEvents.MoveCommandIssued += GameEvents_MoveCommandIssued;
         GameEvents.CharacterDied += GameEvents_CharacterDied;
+        
     }
 
+
+    private void UIEvents_SkipUnitTurnButtonPressed()
+    {
+        if (GameField.Instance.CurrentSelectedNode != null &&
+            CharactersByNodes.ContainsKey(GameField.Instance.CurrentSelectedNode))
+            CharactersByNodes[GameField.Instance.CurrentSelectedNode].HasActionLeft = false;
+        Debug.LogFormat("Skipped turn for {0}", CharactersByNodes[GameField.Instance.CurrentSelectedNode].gameObject.name);
+    }
     private void GameEvents_CharacterDied(ICombatCapable combater)
     {
         CharacterBase character = (CharacterBase) combater;
