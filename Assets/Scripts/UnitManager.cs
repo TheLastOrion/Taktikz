@@ -22,6 +22,9 @@ public class UnitManager : MonoBehaviour
     public static UnitManager Instance;
     public Dictionary<Node, CharacterBase> CharactersByNodes = new Dictionary<Node, CharacterBase>();
 
+    private int enemyCharacterCount;
+
+    private int alliedCharacterCount;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +38,32 @@ public class UnitManager : MonoBehaviour
         GameEvents.CharacterMoveStarted += GameEvents_CharacterMoveStarted; ;
         GameEvents.CharacterMoveCompleted += GameEvents_CharacterMoveCompleted;
         GameEvents.MoveCommandIssued += GameEvents_MoveCommandIssued;
+        GameEvents.CharacterDied += GameEvents_CharacterDied;
+    }
+
+    private void GameEvents_CharacterDied(ICombatCapable combater)
+    {
+        CharacterBase character = (CharacterBase) combater;
+        if (character != null)
+        {
+            if (character.PlayerType == PlayerType.Player)
+            {
+                alliedCharacterCount--;
+            }
+            else
+            {
+                enemyCharacterCount--;
+            }
+        }
+
+        if (enemyCharacterCount == 0)
+        {
+            GameEvents.FireGameWon();
+        }
+        else if (alliedCharacterCount == 0)
+        {
+            GameEvents.FireGameLost();
+        }
     }
 
     private void GameEvents_MoveCommandIssued(IMoveCapable moveCapable, Node startNode, Node endNode)
@@ -200,6 +229,7 @@ public class UnitManager : MonoBehaviour
             Quaternion.identity, _unitsContainer);
         CharacterBase enemyChar = go.GetComponent<CharacterBase>();
         enemyChar.SetPlayerType(PlayerType.AI);
+        enemyCharacterCount++;
         return enemyChar;
 
     }
@@ -211,6 +241,7 @@ public class UnitManager : MonoBehaviour
             Quaternion.identity, _unitsContainer);
         CharacterBase alliedChar = go.GetComponent<CharacterBase>();
         alliedChar.SetPlayerType(PlayerType.Player);
+        alliedCharacterCount++;
         return alliedChar;
     }
 

@@ -11,8 +11,9 @@ public class GameEvents
     public static event Action<ICombatCapable, ICombatCapable> AttackStarted;
     public static event Action<ICombatCapable, ICombatCapable> AttackCompleted;
     public static event Action<ICombatCapable> CharacterDied; 
-    public static event Action<MyGrid> GridInitialized; 
-
+    public static event Action<MyGrid> GridInitialized;
+    public static event Action GameLost; 
+    public static event Action GameWon; 
     public static void FireNodeSelected(Node node)
     {
         if (NodeSelected != null)
@@ -74,6 +75,22 @@ public class GameEvents
         if (GridInitialized != null)
         {
             GridInitialized(grid);
+        }
+    }
+
+    public static void FireGameWon()
+    {
+        if (GameWon != null)
+        {
+            GameWon();
+        }
+    }
+
+    public static void FireGameLost()
+    {
+        if (GameLost != null)
+        {
+            GameLost();
         }
     }
 

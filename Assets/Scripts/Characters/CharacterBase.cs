@@ -200,7 +200,7 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
     public void TakeDamage(int damage)
     {
         _hitPoints -= damage;
-        if (_hitPoints < 0)
+        if (_hitPoints <= 0)
         {
             Die();
         }
