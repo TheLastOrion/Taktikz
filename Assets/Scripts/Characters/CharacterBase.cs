@@ -20,6 +20,16 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         get { return _characterName;}
         set { _characterName = value; }
     }
+
+    public PlayerType PlayerType
+    {
+        get
+        {
+            return _playerType; 
+            
+        }
+        set { _playerType = value; }
+    }
     private Coroutine _currentCoroutine;
     //private Node _currentNode;
 
@@ -121,9 +131,11 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
 
 
 
-    public void Attack(CharacterBase defendingChar)
+    public void Attack(ICombatCapable defender)
     {
-        if (defendingChar._playerType == this._playerType)
+        CharacterBase defendingChar = (CharacterBase) defender;
+
+        if (defendingChar.GetPlayerType() == this.GetPlayerType())
         {
             Debug.LogError("Error, can't attack the same player's character!");
             return;

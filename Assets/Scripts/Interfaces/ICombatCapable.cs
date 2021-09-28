@@ -2,7 +2,7 @@
 {
     public interface ICombatCapable
     {
-        void Attack(CharacterBase defendingChar);
+        void Attack(ICombatCapable defendingChar);
         void Die();
         void TakeDamage();
 
