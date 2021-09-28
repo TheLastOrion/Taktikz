@@ -11,10 +11,12 @@ public class GameField : MonoBehaviour
     [SerializeField] public Material AttackableNodeMaterial;
     [SerializeField] public Material BlockedNodeMaterial;
     [SerializeField] public Material AvailableNodeMaterial;
-
     //TODO change to private again, made public for debugging purposes
     public static MyGrid _grid;
     [SerializeField]private GameObject _nodePrefab;
+    [SerializeField] public GameObject DamageTextPrefab;
+
+
     [SerializeField]private int _width;
     [SerializeField]private int _height;
     [SerializeField]private int _cellSize;

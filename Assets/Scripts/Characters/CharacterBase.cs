@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Assets.Scripts.Interfaces;
 using Enumerations;
 using NUnit.Framework.Api;
+using TMPro;
 using UnityEngine;
 
 public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
@@ -15,6 +16,8 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
     [SerializeField]private int _baseAttackDamage;
     [SerializeField]private PlayerType _playerType;
     private string _characterName;
+    private GameObject _damageTextObject;
+    private TextMeshPro _damageText;
     public string CharacterName
     {
         get { return _characterName;}
@@ -51,6 +54,9 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
     void Start()
     {
         _animatorController = GetComponent<Animator>();
+        _damageTextObject = GameObject.Instantiate(GameField.Instance.DamageTextPrefab, this.gameObject.transform.position, Quaternion.Euler(0,-135,0), this.gameObject.transform);
+        _damageTextObject.transform.localPosition = Vector3.one * 1.5f;
+        _damageText = _damageTextObject.GetComponent<TextMeshPro>();
     }
 
     // Update is called once per frame
@@ -192,6 +198,18 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         Destroy(this.gameObject);
     }
 
+    public IEnumerator TakeDamageCoroutine(int damage)
+    {
+        _damageText.text = damage.ToString();
+        while (_damageTextObject.transform.localPosition.y < GeneralConstants.DAMAGE_TEXT_HEIGHT_BEFORE_DISAPPEAR)
+        {
+            yield return new WaitForFixedUpdate();
+            _damageTextObject.transform.Translate(Vector3.up * _moveAnimationSpeed * Time.fixedDeltaTime);
+        }
+
+        _damageText.text = "";
+    }
+
     public void Die()
     {
         _currentCoroutine = StartCoroutine(DieCoroutine());
@@ -199,6 +217,7 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
 
     public void TakeDamage(int damage)
     {
+        StartCoroutine(TakeDamageCoroutine(damage));
         _hitPoints -= damage;
         if (_hitPoints <= 0)
         {

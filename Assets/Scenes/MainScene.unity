@@ -774,6 +774,8 @@ MonoBehaviour:
     type: 2}
   _nodePrefab: {fileID: 2573376692446676645, guid: a264eaf4cfdfeb64ca559268f86b12d1,
     type: 3}
+  DamageTextPrefab: {fileID: 7437040776783005902, guid: 53f7ca885eb5a53478f068195ec0f8b8,
+    type: 3}
   _width: 10
   _height: 10
   _cellSize: 10
