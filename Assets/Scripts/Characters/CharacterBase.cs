@@ -30,6 +30,11 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         }
         set { _playerType = value; }
     }
+
+    public int MovementRange
+    {
+        get { return _movementRange; }
+    }
     private Coroutine _currentCoroutine;
     //private Node _currentNode;
 

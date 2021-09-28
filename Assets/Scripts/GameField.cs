@@ -136,7 +136,7 @@ public class GameField : MonoBehaviour
             _dfsCount = 0;
             GameField.Instance.CurrentSelectedNode = node;
 
-            TraverseNeighboursAndSetNodeObjectHighlights(new List<Node> { node }, 3, true);
+            TraverseNeighboursAndSetNodeObjectHighlights(new List<Node> { node }, UnitManager.Instance.CharactersByNodes[node].MovementRange, true);
         }
     }
 
