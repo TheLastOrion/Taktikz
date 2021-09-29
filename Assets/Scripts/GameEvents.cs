@@ -11,7 +11,7 @@ public class GameEvents
     public static event Action<IMoveCapable, Node, Node> MoveCommandIssued;
     public static event Action<ICombatCapable, ICombatCapable> AttackStarted;
     public static event Action<ICombatCapable, ICombatCapable> AttackCompleted;
-    public static event Action<ICombatCapable> CharacterDied; 
+    public static event Action<ICombatCapable, Node> CharacterDied; 
     public static event Action<MyGrid> GridInitialized;
     public static event Action<TurnType> TurnChanged; 
     public static event Action GameLost; 
@@ -64,11 +64,11 @@ public class GameEvents
         }
     }
 
-    public static void FireCharacterDied(ICombatCapable character)
+    public static void FireCharacterDied(ICombatCapable character, Node node)
     {
         if (CharacterDied != null)
         {
-            CharacterDied(character);
+            CharacterDied(character, node);
         }
     }
 

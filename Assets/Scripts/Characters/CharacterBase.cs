@@ -46,13 +46,13 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         get { return _movementRange; }
     }
     private Coroutine _currentCoroutine;
-    //private Node _currentNode;
+    private Node _currentNode;
 
-    //public Node CurrentNode
-    //{
-    //    get { return _currentNode; }
-    //    set { _currentNode = value; }
-    //}
+    public Node CurrentNode
+    {
+        get { return _currentNode; }
+        set { _currentNode = value; }
+    }
     #endregion
 
     private Animator _animatorController;
@@ -147,6 +147,7 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
             _hasActionLeft = false;
         }
         GameEvents.FireCharacterMoveCompleted(this, path[path.Count - 1], path[0]);
+        _currentNode = path[path.Count - 1];
 
     }
 
@@ -212,7 +213,7 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         _animatorController.SetTrigger("Die");
         yield return new WaitForSeconds(1);
         _animatorController.ResetTrigger("Die");
-        GameEvents.FireCharacterDied(this);
+        GameEvents.FireCharacterDied(this, _currentNode);
         Destroy(this.gameObject);
     }
 

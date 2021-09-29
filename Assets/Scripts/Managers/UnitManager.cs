@@ -37,7 +37,7 @@ public class UnitManager : MonoBehaviour
         UIEvents.SpawnAlliesButtonPressed += UIEvents_SpawnAlliesButtonPressed;
         UIEvents.SkipUnitTurnButtonPressed += UIEvents_SkipUnitTurnButtonPressed;
 
-        GameEvents.CharacterMoveStarted += GameEvents_CharacterMoveStarted; ;
+        GameEvents.CharacterMoveStarted += GameEvents_CharacterMoveStarted;
         GameEvents.CharacterMoveCompleted += GameEvents_CharacterMoveCompleted;
         GameEvents.MoveCommandIssued += GameEvents_MoveCommandIssued;
         GameEvents.CharacterDied += GameEvents_CharacterDied;
@@ -52,7 +52,7 @@ public class UnitManager : MonoBehaviour
             CharactersByNodes[GameField.Instance.CurrentSelectedNode].HasActionLeft = false;
         Debug.LogFormat("Skipped turn for {0}", CharactersByNodes[GameField.Instance.CurrentSelectedNode].gameObject.name);
     }
-    private void GameEvents_CharacterDied(ICombatCapable combater)
+    private void GameEvents_CharacterDied(ICombatCapable combater, Node node)
     {
         CharacterBase character = (CharacterBase) combater;
         if (character != null)
@@ -240,6 +240,7 @@ public class UnitManager : MonoBehaviour
             Quaternion.identity, _unitsContainer);
         CharacterBase enemyChar = go.GetComponent<CharacterBase>();
         enemyChar.SetPlayerType(PlayerType.AI);
+        enemyChar.CurrentNode = node;
         enemyCharacterCount++;
         return enemyChar;
 
@@ -252,6 +253,7 @@ public class UnitManager : MonoBehaviour
             Quaternion.identity, _unitsContainer);
         CharacterBase alliedChar = go.GetComponent<CharacterBase>();
         alliedChar.SetPlayerType(PlayerType.Player);
+        alliedChar.CurrentNode = node;
         alliedCharacterCount++;
         return alliedChar;
     }

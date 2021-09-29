@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using Assets.Scripts.Interfaces;
 using Enumerations;
 using UnityEngine;
 
@@ -55,11 +56,23 @@ public class GameField : MonoBehaviour
 
         GameEvents.NodeSelected += GameEvents_NodeSelected;
         GameEvents.CharacterMoveCompleted += GameEvents_CharacterMoveCompleted;
-        GameEvents.CharacterMoveStarted += GameEvents_CharacterMoveStarted; 
+        GameEvents.CharacterMoveStarted += GameEvents_CharacterMoveStarted;
+        GameEvents.CharacterDied += GameEvents_CharacterDied;
         GameEvents.FireGridInitialized(_grid);
 
     }
 
+    private void GameEvents_CharacterDied(ICombatCapable combater, Node node)
+    {
+        CharacterBase character = (CharacterBase) combater;
+        if (node != null && UnitManager.Instance.CharactersByNodes.ContainsKey(node) &&
+            UnitManager.Instance.CharactersByNodes[node] == character)
+        {
+            UnitManager.Instance.CharactersByNodes.Remove(node);
+            node.TileAvailability = TileAvailabilityType.AvailableForMovement;
+            Debug.LogFormat("{0} died on node X:{1}  Y:{2}",character.gameObject.name, node.GetXCoord(), node.GetYCoord());
+        }
+    }
 
     private void GameEvents_CharacterMoveStarted(CharacterBase arg1, Node arg2, Node arg3)
     {
