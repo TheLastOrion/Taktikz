@@ -6,8 +6,8 @@ using UnityEngine;
 public class GameEvents
 {
     public static event Action<Node> NodeSelected;
-    public static event Action<CharacterBase, Node, Node> CharacterMoveStarted;
-    public static event Action<CharacterBase, Node, Node> CharacterMoveCompleted;
+    public static event Action<IMoveCapable, Node, Node> CharacterMoveStarted;
+    public static event Action<IMoveCapable, Node, Node> CharacterMoveCompleted;
     public static event Action<IMoveCapable, Node, Node> MoveCommandIssued;
     public static event Action<ICombatCapable, ICombatCapable> AttackStarted;
     public static event Action<ICombatCapable, ICombatCapable> AttackCompleted;
@@ -18,6 +18,7 @@ public class GameEvents
     public static event Action GameWon;
     public static event Action EnemiesSpawned; 
     public static event Action AlliesSpawned;
+    public static event Action<CharacterBase> CharacterTurnSkipped; 
     public static event Action<ICombatCapable> AICharacterTurnStarted;
     public static event Action<ICombatCapable> AICharacterTurnEnded;
     public static event Action AllAICharsAreFinishedActing;
@@ -146,6 +147,14 @@ public class GameEvents
         if (AllAICharsAreFinishedActing != null)
         {
             AllAICharsAreFinishedActing();
+        }
+    }
+
+    public static void FireCharacterTurnSkipped(CharacterBase character)
+    {
+        if (CharacterTurnSkipped != null)
+        {
+            CharacterTurnSkipped(character);
         }
     }
 

@@ -74,13 +74,13 @@ public class GameField : MonoBehaviour
         }
     }
 
-    private void GameEvents_CharacterMoveStarted(CharacterBase arg1, Node arg2, Node arg3)
+    private void GameEvents_CharacterMoveStarted(IMoveCapable arg1, Node arg2, Node arg3)
     {
         ClearNodeObjectHighlights();
         ClearAllNodeObjectPathCosts();
     }
 
-    private void GameEvents_CharacterMoveCompleted(CharacterBase arg1, Node startNode, Node endNode)
+    private void GameEvents_CharacterMoveCompleted(IMoveCapable arg1, Node startNode, Node endNode)
     {
         startNode.TileAvailability = TileAvailabilityType.AvailableForMovement;
         endNode.TileAvailability = TileAvailabilityType.Blocked;

@@ -142,13 +142,14 @@ public class UnitManager : MonoBehaviour
 
     }
 
-    private void GameEvents_CharacterMoveCompleted(CharacterBase character, Node startNode, Node endNode)
+    private void GameEvents_CharacterMoveCompleted(IMoveCapable character, Node startNode, Node endNode)
     {
+        CharacterBase movingCharacter = (CharacterBase) character;
         CharactersByNodes.Remove(startNode);
-        CharactersByNodes[endNode] = character;
+        CharactersByNodes[endNode] = movingCharacter;
     }
 
-    private void GameEvents_CharacterMoveStarted(CharacterBase character, Node startNode, Node endNode)
+    private void GameEvents_CharacterMoveStarted(IMoveCapable character, Node startNode, Node endNode)
     {
 
     }
