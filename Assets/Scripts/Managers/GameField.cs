@@ -151,7 +151,7 @@ public class GameField : MonoBehaviour
             ClearAllNodeObjectPathCosts();
             ClearNodeObjectHighlights();
             _dfsCount = 0;
-            GameField.Instance.CurrentSelectedNode = node;
+            CurrentSelectedNode = node;
 
             TraverseNeighboursAndSetNodeObjectHighlights(new List<Node> { node }, UnitManager.Instance.CharactersByNodes[node].MovementRange, true);
         }
@@ -242,7 +242,13 @@ public class GameField : MonoBehaviour
 
         return pathList;
     }
-    
+
+    public List<Node> GetPathToClosestToTargetNode(Node startNode, Node targetNode, int range)
+    {
+        List<Node> pathList = new List<Node>();
+        return pathList;
+    }
+
     public void HighlightDebug()
     {
         for (int i = 0; i < _width; i++)

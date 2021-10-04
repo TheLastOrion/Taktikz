@@ -15,7 +15,11 @@ public class GameEvents
     public static event Action<MyGrid> GridInitialized;
     public static event Action<TurnType> TurnChanged; 
     public static event Action GameLost; 
-    public static event Action GameWon; 
+    public static event Action GameWon;
+    public static event Action EnemiesSpawned; 
+    public static event Action AlliesSpawned;
+    public static event Action<ICombatCapable> AICharacterTurnStarted;
+    public static event Action<ICombatCapable> AICharacterTurnEnded; 
     public static void FireNodeSelected(Node node)
     {
         if (NodeSelected != null)
@@ -103,6 +107,40 @@ public class GameEvents
             TurnChanged(newTurn);
         }
     }
+
+    public static void FireEnemiesSpawned()
+    {
+        if (EnemiesSpawned != null)
+        {
+            EnemiesSpawned();
+        }
+    }
+
+    public static void FireAlliesSpawned()
+    {
+        if (AlliesSpawned != null)
+        {
+            AlliesSpawned();
+        }
+    }
+
+    public static void FireAICharacterTurnStarted(ICombatCapable combater)
+    {
+        if (AICharacterTurnStarted != null)
+        {
+            AICharacterTurnStarted(combater);
+        }
+    }
+
+    public static void FireAICharacterTurnEnded(ICombatCapable combater)
+    {
+        if (AICharacterTurnEnded != null)
+        {
+            AICharacterTurnEnded(combater);
+        }
+    }
+
+
 
 
 

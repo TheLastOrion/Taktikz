@@ -823,6 +823,7 @@ GameObject:
   - component: {fileID: 652039009}
   - component: {fileID: 652039010}
   - component: {fileID: 652039011}
+  - component: {fileID: 652039012}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -886,6 +887,8 @@ MonoBehaviour:
   MinNumberOfEnemies: 7
   MaxNumberOfAllies: 4
   MinNumberOfAllies: 7
+  PlayerCharacters: []
+  AICharacters: []
 --- !u!114 &652039011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -899,6 +902,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _turnIndicatorText: {fileID: 1625714221}
+--- !u!114 &652039012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 652039008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 773a098635ec21942a509702b47378c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &652039013
 Transform:
   m_ObjectHideFlags: 0

@@ -21,6 +21,9 @@ public class UnitManager : MonoBehaviour
 
     public static UnitManager Instance;
     public Dictionary<Node, CharacterBase> CharactersByNodes = new Dictionary<Node, CharacterBase>();
+    public List<CharacterBase> PlayerCharacters = new List<CharacterBase>();
+    public List<CharacterBase> AICharacters = new List<CharacterBase>();
+
 
     private int enemyCharacterCount;
 
@@ -64,6 +67,15 @@ public class UnitManager : MonoBehaviour
             else
             {
                 enemyCharacterCount--;
+            }
+
+            if (character.GetPlayerType() == PlayerType.AI)
+            {
+                AICharacters.Remove(character);
+            }
+            else if (character.GetPlayerType() == PlayerType.Player)
+            {
+                PlayerCharacters.Remove(character);
             }
         }
 
@@ -200,6 +212,7 @@ public class UnitManager : MonoBehaviour
                 }
             }
         }
+        GameEvents.FireEnemiesSpawned();
     }
 
     public void SpawnAllies(int numberOfAllies, bool placeClose = true)
@@ -230,6 +243,8 @@ public class UnitManager : MonoBehaviour
                 }
             }
         }
+        GameEvents.FireAlliesSpawned();
+
     }
 
 
@@ -242,6 +257,7 @@ public class UnitManager : MonoBehaviour
         enemyChar.SetPlayerType(PlayerType.AI);
         enemyChar.CurrentNode = node;
         enemyCharacterCount++;
+        AICharacters.Add(enemyChar);
         return enemyChar;
 
     }
@@ -255,6 +271,7 @@ public class UnitManager : MonoBehaviour
         alliedChar.SetPlayerType(PlayerType.Player);
         alliedChar.CurrentNode = node;
         alliedCharacterCount++;
+        PlayerCharacters.Add(alliedChar);
         return alliedChar;
     }
 

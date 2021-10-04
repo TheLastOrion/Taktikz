@@ -46,6 +46,13 @@ public class MyGrid
 
     }
 
+    public int GetDistance(Node startNode, Node endNode)
+    {
+        int distance = Mathf.Abs(startNode.GetXCoord() - endNode.GetXCoord()) +
+                       Mathf.Abs(startNode.GetYCoord() - endNode.GetYCoord());
+        return distance;
+    }
+
     public List<Node> GetNeighboringNodes(int x, int y)
     {
         List<Node> nodeList = new List<Node>();
