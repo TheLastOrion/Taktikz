@@ -19,7 +19,8 @@ public class GameEvents
     public static event Action EnemiesSpawned; 
     public static event Action AlliesSpawned;
     public static event Action<ICombatCapable> AICharacterTurnStarted;
-    public static event Action<ICombatCapable> AICharacterTurnEnded; 
+    public static event Action<ICombatCapable> AICharacterTurnEnded;
+    public static event Action AllAICharsAreFinishedActing;
     public static void FireNodeSelected(Node node)
     {
         if (NodeSelected != null)
@@ -137,6 +138,14 @@ public class GameEvents
         if (AICharacterTurnEnded != null)
         {
             AICharacterTurnEnded(combater);
+        }
+    }
+
+    public static void FireAllAICharsAreFinishedActing()
+    {
+        if (AllAICharsAreFinishedActing != null)
+        {
+            AllAICharsAreFinishedActing();
         }
     }
 

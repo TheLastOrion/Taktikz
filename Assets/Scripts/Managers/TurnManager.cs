@@ -17,13 +17,22 @@ public class TurnManager : MonoBehaviour
     }
     private void Start()
     {
+        GameEvents.AllAICharsAreFinishedActing += GameEvents_AllAICharsAreFinishedActing;
         GameEvents.TurnChanged += GameEvents_TurnChanged;
         if (Instance != null)
         {
             Instance = this;
         }
+
+        TurnType = TurnType.PlayerTurn;
         GameEvents.FireTurnChanged(TurnType.PlayerTurn);
 
+    }
+
+    private void GameEvents_AllAICharsAreFinishedActing()
+    {
+        TurnType = TurnType.AITurn;
+        GameEvents.FireTurnChanged(TurnType.AITurn);
     }
 
     private void GameEvents_TurnChanged(TurnType newTurn)

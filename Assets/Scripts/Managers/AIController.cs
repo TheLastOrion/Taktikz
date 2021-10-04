@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Interfaces;
 using Enumerations;
 using UnityEngine;
@@ -8,10 +8,11 @@ public class AIController : MonoBehaviour
 {
     // Start is called before the first frame update
     private Dictionary<CharacterBase, CharacterBase> AITargetCharacterDictionary;
-
+    private int enemyCounter;
     public static AIController Instance;
     void Start()
     {
+        enemyCounter = 0;
         if (Instance == null)
         {
             Instance = this;
@@ -20,6 +21,39 @@ public class AIController : MonoBehaviour
         GameEvents.EnemiesSpawned += GameEvents_EnemiesSpawned;
         GameEvents.AlliesSpawned += GameEvents_AlliesSpawned;
         GameEvents.CharacterDied += GameEvents_CharacterDied;
+        GameEvents.TurnChanged += GameEvents_TurnChanged;
+        GameEvents.AICharacterTurnStarted += GameEvents_AICharacterTurnStarted;
+        GameEvents.AICharacterTurnEnded += GameEvents_AICharacterTurnEnded;
+    }
+    private void GameEvents_AICharacterTurnStarted(ICombatCapable combater)
+    {
+        CharacterBase character = (CharacterBase)combater;
+        MoveAICloserToTargetAndAttackIfAble(character, AITargetCharacterDictionary[character]);
+    }
+    private void GameEvents_AICharacterTurnEnded(ICombatCapable combater)
+    {
+        if (enemyCounter >= AITargetCharacterDictionary.Count)
+        {
+            GameEvents.FireAllAICharsAreFinishedActing();
+        }
+        else
+        {
+            CharacterBase character = (CharacterBase)combater;
+            GameEvents.FireAICharacterTurnStarted(AITargetCharacterDictionary.Keys.ElementAt(enemyCounter));
+            enemyCounter++;
+        }
+        
+    }
+
+
+
+    private void GameEvents_TurnChanged(TurnType turn)
+    {
+        if (turn == TurnType.AITurn)
+        {
+            GameEvents.FireAICharacterTurnStarted(AITargetCharacterDictionary.Keys.ElementAt(enemyCounter));
+            enemyCounter++;
+        }
     }
 
     private void GameEvents_AlliesSpawned()
@@ -80,5 +114,6 @@ public class AIController : MonoBehaviour
     {
         CharacterBase AIAttackerChar = (CharacterBase) aiCombater;
         CharacterBase DefendingChar = (CharacterBase) defender;
+
     }
 }
