@@ -105,6 +105,12 @@ public class AIController : MonoBehaviour
                 }
             }
         }
+
+        if (character != null && character.GetPlayerType() == PlayerType.AI)
+        {
+            
+            AITargetCharacterDictionary.Remove(character);
+        }
     }
 
     public void AssignAITargets()

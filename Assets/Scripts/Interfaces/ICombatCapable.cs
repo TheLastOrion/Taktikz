@@ -3,8 +3,8 @@
     public interface ICombatCapable
     {
         void Attack(ICombatCapable defendingChar);
-        void Die();
-        void TakeDamage(int damage);
+        void Die(ICombatCapable attacker);
+        void TakeDamage(ICombatCapable attacker, int damage, bool isFatal);
 
     }
 }

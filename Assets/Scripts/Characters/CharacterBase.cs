@@ -102,12 +102,26 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
     }
     public void MoveToNodeAndAttack(List<Node> path, ICombatCapable defender, Node defenderNode, bool rotate = true)
     {
-        _currentCoroutine = StartCoroutine(MoveToNodeAndAttackCoroutine(path, defender, defenderNode, rotate));
+        if (this != null)
+        {
+            _currentCoroutine = StartCoroutine(MoveToNodeAndAttackCoroutine(path, defender, defenderNode, rotate));
+        }
+        else
+        {
+            Debug.LogErrorFormat("is destroyed but trying to move and attack!");
+        }
     }
 
     public void MoveToNode(List<Node> path, bool rotate = true)
     {
-        _currentCoroutine = StartCoroutine(MoveToNodeCoroutine(path, rotate));
+        if (this != null)
+        {
+            _currentCoroutine = StartCoroutine(MoveToNodeCoroutine(path, rotate));
+        }
+        else
+        {
+            Debug.LogErrorFormat("is destroyed but trying to move!");
+        }
     }
 
     public IEnumerator MoveToNodeCoroutine(List<Node> path, bool rotate = true, bool isMoveAndAttack = false)
@@ -204,25 +218,27 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
 
         _animatorController.SetTrigger("Melee Right Attack 01");
         yield return new WaitForSeconds(2);
-        defendingChar.TakeDamage(_baseAttackDamage);
+        defendingChar.TakeDamage(this, _baseAttackDamage);
         Debug.LogFormat("{0} attacks {1} for {2} damage! {1} has {3} hitpoints left!",this.gameObject.name, defendingChar.gameObject.name, _baseAttackDamage, _hitPoints - _baseAttackDamage);
         _hasActionLeft = false;
-        GameEvents.FireAttackCompleted(this, defender);
-        GameEvents.FireCharacterTurnComplete(this);
+        // GameEvents.FireAttackCompleted(this, defender);
+        // GameEvents.FireCharacterTurnComplete(this);
 
 
     }
 
-    public IEnumerator DieCoroutine()
+    public IEnumerator DieCoroutine(ICombatCapable attacker)
     {
         _animatorController.SetTrigger("Die");
         yield return new WaitForSeconds(1);
         _animatorController.ResetTrigger("Die");
         GameEvents.FireCharacterDied(this, _currentNode);
+        GameEvents.FireAttackCompleted(attacker, this);
+        GameEvents.FireCharacterTurnComplete((IMoveCapable)attacker);
         Destroy(this.gameObject);
     }
 
-    public IEnumerator TakeDamageCoroutine(int damage)
+    public IEnumerator TakeDamageCoroutine(ICombatCapable attacker, int damage, bool isFatal = false)
     {
         _damageText.text = damage.ToString();
         while (_damageTextObject.transform.localPosition.y < GeneralConstants.DAMAGE_TEXT_HEIGHT_BEFORE_DISAPPEAR)
@@ -231,22 +247,27 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
             _damageTextObject.transform.Translate(Vector3.up * _moveAnimationSpeed * Time.fixedDeltaTime);
         }
 
+        if (!isFatal)
+        {
+            GameEvents.FireAttackCompleted(attacker, this);
+            GameEvents.FireCharacterTurnComplete((IMoveCapable)attacker);
+        }
         _damageText.text = "";
         _damageTextObject.transform.localPosition = GeneralConstants.DAMAGE_TEXT_DEFAULT_POSITION_VECTOR;
     }
 
-    public void Die()
+    public void Die(ICombatCapable attacker)
     {
-        _currentCoroutine = StartCoroutine(DieCoroutine());
+        _currentCoroutine = StartCoroutine(DieCoroutine(attacker));
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(ICombatCapable attacker, int damage, bool isFatal = false)
     {
-        StartCoroutine(TakeDamageCoroutine(damage));
+        StartCoroutine(TakeDamageCoroutine(attacker, damage, isFatal));
         _hitPoints -= damage;
         if (_hitPoints <= 0)
         {
-            Die();
+            Die(attacker);
         }
     }
 }
