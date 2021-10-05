@@ -11,6 +11,7 @@ public class GameEvents
     public static event Action<IMoveCapable, Node, Node> MoveCommandIssued;
     public static event Action<ICombatCapable, ICombatCapable> AttackStarted;
     public static event Action<ICombatCapable, ICombatCapable> AttackCompleted;
+    public static event Action<IMoveCapable> CharacterTurnComplete;
     public static event Action<ICombatCapable, Node> CharacterDied; 
     public static event Action<MyGrid> GridInitialized;
     public static event Action<TurnType> TurnChanged; 
@@ -22,6 +23,7 @@ public class GameEvents
     public static event Action<ICombatCapable> AICharacterTurnStarted;
     public static event Action<ICombatCapable> AICharacterTurnEnded;
     public static event Action AllAICharsAreFinishedActing;
+    public static event Action AllPlayerCharsAreFinishedActing;
     public static void FireNodeSelected(Node node)
     {
         if (NodeSelected != null)
@@ -70,6 +72,13 @@ public class GameEvents
         }
     }
 
+    public static void FireCharacterTurnComplete(IMoveCapable mover)
+    {
+        if (CharacterTurnComplete != null)
+        {
+            CharacterTurnComplete(mover);
+        }
+    }
     public static void FireCharacterDied(ICombatCapable character, Node node)
     {
         if (CharacterDied != null)
@@ -147,6 +156,14 @@ public class GameEvents
         if (AllAICharsAreFinishedActing != null)
         {
             AllAICharsAreFinishedActing();
+        }
+    }
+    
+    public static void FireAllPlayerCharsAreFinishedActing()
+    {
+        if (AllPlayerCharsAreFinishedActing != null)
+        {
+            AllPlayerCharsAreFinishedActing();
         }
     }
 

@@ -29,7 +29,7 @@ public class GameField : MonoBehaviour
     [SerializeField] private int DebugRange;
 
     private Node _currentSelectedNode;
-    private int _dfsCount = 0;
+    private int _bfsCount = 0;
 
     public Node CurrentSelectedNode
     {
@@ -37,6 +37,7 @@ public class GameField : MonoBehaviour
         set { _currentSelectedNode = value; }
     }
     public Dictionary<Vector2, GameObject> NodeObjectDictionary = new Dictionary<Vector2, GameObject>();
+    private List<Node> _distanceAssignedNodes = new List<Node>();
 
     // Start is called before the first frame update
     void Start()
@@ -76,11 +77,11 @@ public class GameField : MonoBehaviour
 
     private void GameEvents_CharacterMoveStarted(IMoveCapable arg1, Node arg2, Node arg3)
     {
-        ClearNodeObjectHighlights();
-        ClearAllNodeObjectPathCosts();
+        // ClearNodeObjectHighlights();
+        // ClearAllNodeObjectPathCosts();
     }
 
-    private void GameEvents_CharacterMoveCompleted(IMoveCapable arg1, Node startNode, Node endNode)
+    private void GameEvents_CharacterMoveCompleted(IMoveCapable mover, Node startNode, Node endNode)
     {
         startNode.TileAvailability = TileAvailabilityType.AvailableForMovement;
         endNode.TileAvailability = TileAvailabilityType.Blocked;
@@ -147,14 +148,21 @@ public class GameField : MonoBehaviour
             UnitManager.Instance.CharactersByNodes[node].HasActionLeft)
         {
             Debug.LogFormat("Node Selected: X:{0}  Y:{1}", node.GetXCoord(), node.GetYCoord());
-            _grid.ResetAllNodesForPathfinding();
-            ClearAllNodeObjectPathCosts();
-            ClearNodeObjectHighlights();
-            _dfsCount = 0;
+            ClearGridNodesForPathfinding();
             CurrentSelectedNode = node;
+            List<Node> traversedNodes =
 
-            TraverseNeighboursAndSetNodeObjectHighlights(new List<Node> { node }, UnitManager.Instance.CharactersByNodes[node].MovementRange, true);
+            TraverseNeighboursAndSetNodeObjectHighlights(new List<Node> { node }, UnitManager.Instance.CharactersByNodes[node].MovementRange,true);
         }
+    }
+
+    public void ClearGridNodesForPathfinding()
+    {
+        _grid.ResetAllNodesForPathfinding();
+        ClearAllNodeObjectPathCosts();
+        ClearNodeObjectHighlights();
+        _distanceAssignedNodes.Clear();
+        _bfsCount = 0;
     }
 
     private void ClearAllNodeObjectPathCosts()
@@ -165,23 +173,26 @@ public class GameField : MonoBehaviour
         }
     }
 
-    public void TraverseNeighboursAndSetNodeObjectHighlights(List<Node> nodes, int range, bool highlightTiles = false)
+    public List<Node> TraverseNeighboursAndSetNodeObjectHighlights(List<Node> nodes, int range, bool highlightTiles = false)
     {
+        List<Node> currentLevelNeighbors = new List<Node>();
+        if (_bfsCount >= range)
+        {
+            return _distanceAssignedNodes;
+        }
 
-        if (_dfsCount >= range)
-            return;
         foreach (var node in nodes)
         {
             /// Check for dfs_count to negate blocking on home tile
-            if ((!node.IsTraversedDuringPathfinding && node.TileAvailability != TileAvailabilityType.Blocked )|| _dfsCount == 0)
+            if ((!node.IsTraversedDuringPathfinding && node.TileAvailability != TileAvailabilityType.Blocked )|| _bfsCount == 0)
             {
                 node.IsTraversedDuringPathfinding = true;
-                node.DistanceFromSelectedNode = _dfsCount;
-                NodeObjectDictionary[new Vector2(node.GetXCoord(), node.GetYCoord())].GetComponent<NodeObject>().AssignPathCostText((_dfsCount).ToString());
+                node.DistanceFromSelectedNode = _bfsCount;
+                _distanceAssignedNodes.Add(node);
+                NodeObjectDictionary[new Vector2(node.GetXCoord(), node.GetYCoord())].GetComponent<NodeObject>().AssignPathCostText((_bfsCount).ToString());
             }
         }
         
-        List<Node> currentLevelNeighbors = new List<Node>();
 
         foreach (var node in nodes)
         {
@@ -209,8 +220,10 @@ public class GameField : MonoBehaviour
                  currentLevelNeighbor.TileAvailability != TileAvailabilityType.OccupiedByFriends))
             {
                 currentLevelNeighbor.IsTraversedDuringPathfinding = true;
-                currentLevelNeighbor.DistanceFromSelectedNode = _dfsCount + 1;
-                NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().AssignPathCostText((_dfsCount + 1).ToString() );
+                currentLevelNeighbor.DistanceFromSelectedNode = _bfsCount + 1;
+                _distanceAssignedNodes.Add(currentLevelNeighbor);
+
+                NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().AssignPathCostText((_bfsCount + 1).ToString() );
                 if (highlightTiles)
                 {
                     NodeObjectDictionary[new Vector2(currentLevelNeighbor.GetXCoord(), currentLevelNeighbor.GetYCoord())].GetComponent<NodeObject>().Highlight(HighlightType.Available);
@@ -226,10 +239,15 @@ public class GameField : MonoBehaviour
             }
         }
 
-        _dfsCount++;
+        _bfsCount++;
         TraverseNeighboursAndSetNodeObjectHighlights(currentLevelNeighbors, range, highlightTiles);
+        return _distanceAssignedNodes;
     }
 
+    // public Node GetNodeClosestToTargetWithinRange(Node startNode, int range)
+    // {
+    //     
+    // }
     public List<Node> GetShortestPathToTargetNode(Node nodeEnd)
     {
         List<Node> pathList = new List<Node>();

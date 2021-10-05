@@ -142,18 +142,21 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
             }
         }
         _animatorController.SetBool("Run", false);
+        _currentNode = path[0];
+
+        GameEvents.FireCharacterMoveCompleted(this, path[path.Count - 1], path[0]);
+        
         if (!isMoveAndAttack)
         {
             _hasActionLeft = false;
+            GameEvents.FireCharacterTurnComplete(this);
         }
-        GameEvents.FireCharacterMoveCompleted(this, path[path.Count - 1], path[0]);
-        _currentNode = path[path.Count - 1];
 
     }
 
-    public IEnumerator MoveToNodeAndAttackCoroutine(List<Node> path, ICombatCapable defender, Node defenderNode, bool rotate = true)
+    public IEnumerator MoveToNodeAndAttackCoroutine(List<Node> path, ICombatCapable defender, Node defenderNode, bool rotate = true )
     {
-        yield return MoveToNodeCoroutine(path, rotate);
+        yield return MoveToNodeCoroutine(path, rotate, true);
         if (rotate)
         {
             RotateTowards(defenderNode);
@@ -200,11 +203,13 @@ public class CharacterBase : MonoBehaviour, IMoveCapable, ICombatCapable
         CharacterBase defendingChar = (CharacterBase)defender;
 
         _animatorController.SetTrigger("Melee Right Attack 01");
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
         defendingChar.TakeDamage(_baseAttackDamage);
         Debug.LogFormat("{0} attacks {1} for {2} damage! {1} has {3} hitpoints left!",this.gameObject.name, defendingChar.gameObject.name, _baseAttackDamage, _hitPoints - _baseAttackDamage);
         _hasActionLeft = false;
         GameEvents.FireAttackCompleted(this, defender);
+        GameEvents.FireCharacterTurnComplete(this);
+
 
     }
 

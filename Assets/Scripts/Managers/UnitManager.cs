@@ -42,9 +42,24 @@ public class UnitManager : MonoBehaviour
 
         GameEvents.CharacterMoveStarted += GameEvents_CharacterMoveStarted;
         GameEvents.CharacterMoveCompleted += GameEvents_CharacterMoveCompleted;
+        GameEvents.CharacterTurnComplete += GameEvents_CharacterTurnComplete;
         GameEvents.MoveCommandIssued += GameEvents_MoveCommandIssued;
         GameEvents.CharacterDied += GameEvents_CharacterDied;
+        GameEvents.TurnChanged += GameEvents_TurnChanged;
         
+    }
+
+    private void GameEvents_TurnChanged(TurnType turn)
+    {
+        foreach (var playerCharacter in PlayerCharacters)
+        {
+            playerCharacter.HasActionLeft = true;
+        }
+        foreach (var aiCharacter in AICharacters)
+        {
+            aiCharacter.HasActionLeft = true;
+        }
+            
     }
 
 
@@ -142,11 +157,52 @@ public class UnitManager : MonoBehaviour
 
     }
 
-    private void GameEvents_CharacterMoveCompleted(IMoveCapable character, Node startNode, Node endNode)
+    private void GameEvents_CharacterMoveCompleted(IMoveCapable mover, Node startNode, Node endNode)
     {
-        CharacterBase movingCharacter = (CharacterBase) character;
+        CharacterBase movingCharacter = (CharacterBase) mover;
         CharactersByNodes.Remove(startNode);
         CharactersByNodes[endNode] = movingCharacter;
+
+        
+    }
+    
+    private void GameEvents_CharacterTurnComplete(IMoveCapable mover)
+    {
+        CharacterBase movingCharacter = (CharacterBase) mover;
+
+        if (movingCharacter.PlayerType == PlayerType.Player)
+        {
+            bool isPlayerTurnComplete = true;
+            foreach (var playerCharacter in PlayerCharacters)
+            {
+                if (playerCharacter.HasActionLeft)
+                {
+                    isPlayerTurnComplete = false;
+                }
+                
+            }
+
+            if (isPlayerTurnComplete)
+            {
+                GameEvents.FireAllPlayerCharsAreFinishedActing();
+            }
+        }
+        else
+        {
+            bool isAITurnComplete = true;
+            foreach (var characterBase in AICharacters)
+            {
+                if (characterBase.HasActionLeft)
+                {
+                    isAITurnComplete = false;
+                }
+            }
+
+            if (isAITurnComplete)
+            {
+                GameEvents.FireAllAICharsAreFinishedActing();
+            }
+        }
     }
 
     private void GameEvents_CharacterMoveStarted(IMoveCapable character, Node startNode, Node endNode)
@@ -188,7 +244,7 @@ public class UnitManager : MonoBehaviour
     }
     public void SpawnEnemies(int numberOfEnemies, bool placeClose = true)
     {
-        for (int i = 0; i < numberOfEnemies; i++)
+        for (int i = 0; i < 2; i++)
         {
             int randomTryCount = 0;
 
@@ -218,7 +274,7 @@ public class UnitManager : MonoBehaviour
 
     public void SpawnAllies(int numberOfAllies, bool placeClose = true)
     {
-        for (int i = 0; i < numberOfAllies; i++)
+        for (int i = 0; i < 1; i++)
         {
             int randomTryCount = 0;
 
