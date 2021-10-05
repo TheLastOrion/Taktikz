@@ -244,7 +244,7 @@ public class UnitManager : MonoBehaviour
     }
     public void SpawnEnemies(int numberOfEnemies, bool placeClose = true)
     {
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < numberOfEnemies; i++)
         {
             int randomTryCount = 0;
 
@@ -274,7 +274,7 @@ public class UnitManager : MonoBehaviour
 
     public void SpawnAllies(int numberOfAllies, bool placeClose = true)
     {
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < numberOfAllies; i++)
         {
             int randomTryCount = 0;
 

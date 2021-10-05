@@ -137,7 +137,7 @@ public class AIController : MonoBehaviour
         Node defenderCurrentNode = DefendingChar.CurrentNode;
         GameField.Instance.ClearGridNodesForPathfinding();
         List<Node> traversedNodes =
-        GameField.Instance.TraverseNeighboursAndSetNodeObjectHighlights(new List<Node> { attackerCurrentNode }, AIAttackerChar.MovementRange,true);
+        GameField.Instance.TraverseNeighboursAndSetNodeObjectHighlights(new List<Node> { attackerCurrentNode }, AIAttackerChar.MovementRange,false);
         Node closestNode = new Node(-1, -1, -2); // Dummy node;
         
         int min = Int32.MaxValue;

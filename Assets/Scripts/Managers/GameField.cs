@@ -77,8 +77,8 @@ public class GameField : MonoBehaviour
 
     private void GameEvents_CharacterMoveStarted(IMoveCapable arg1, Node arg2, Node arg3)
     {
-        // ClearNodeObjectHighlights();
-        // ClearAllNodeObjectPathCosts();
+        ClearNodeObjectHighlights();
+        ClearAllNodeObjectPathCosts();
     }
 
     private void GameEvents_CharacterMoveCompleted(IMoveCapable mover, Node startNode, Node endNode)
